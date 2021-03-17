@@ -10,7 +10,6 @@
   export let edit = false
 
   let product_id = null
-  let mrp = null
   let quantity = 0
   let available = 0
   let defective = 0
@@ -34,12 +33,12 @@
     let payload = {
       product_id,
       product_title: selected_product.title,
-      mrp,
       quantity,
       available,
       defective,
       discount,
-      price
+      price,
+      sale_price
     }
     dispatch('done', payload)
   }
@@ -50,11 +49,11 @@
     console.log(products)
     if (initial) {
       product_id = initial.product_id
-      mrp = initial.mrp
       quantity = initial.quantity
       available = initial.available
       defective = initial.defective
       price = initial.price
+      sale_price = initial.sale_price
       discount = initial.discount
     }
   })

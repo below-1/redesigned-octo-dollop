@@ -6,7 +6,7 @@ function fetch_opts (def) {
   }
   const token = localStorage.getItem('waka.token')
   if (token) {
-    headers['Authorization'] = token
+    headers['Authorization'] = `Bearer ${token}`
   }
   return {
     ...def,

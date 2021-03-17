@@ -33,10 +33,10 @@
 		{ path: '/app/supplier', label: 'supplier', desc: 'pengolahan data supplier', icon: FaTruckMoving },
 		{ path: '/app/product', label: 'gudang', desc: 'pengolahan data barang', icon: FaBoxes },
 		{ group: true, label: 'transaksi' },
-		{ path: '/app/pembelian', label: 'pembelian', desc: 'pengolahan data pembelian', icon: FaHandHoldingUsd },
-		{ path: '/app/penjualan', label: 'penjualan', desc: 'pengolahan data kategori penjualan', icon: FaHandHoldingHeart },
-		{ path: '/app/bu', label: 'beban usaha', desc: 'pengolahan data beban usaha', icon: FaLandmark },
-		{ path: '/app/piutang', label: 'piutang', desc: 'pengolahan data piutang', icon: FaLandmark },
+		{ path: '/app/purchase', label: 'pembelian', desc: 'pengolahan data pembelian', icon: FaHandHoldingUsd },
+		{ path: '/app/sale', label: 'penjualan', desc: 'pengolahan data kategori penjualan', icon: FaHandHoldingHeart },
+		{ path: '/app/opex', label: 'beban usaha', desc: 'pengolahan data beban usaha', icon: FaLandmark },
+		{ path: '/app/ar', label: 'piutang', desc: 'pengolahan data piutang', icon: FaLandmark },
 	]
 
 	onMount(() => {

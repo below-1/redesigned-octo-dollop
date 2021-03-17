@@ -125,9 +125,9 @@
             </div>
           </td>
           <td>{item.content ? item.content : '-'}</td>
-          <td>{item.stok_tersedia ? item.stok_tersedia : '-'}</td>
-          <td>{item.stok_terjual ? item.stok_terjual : '-'}</td>
-          <td>{item.stok_rusak ? item.stok_rusak : '-'}</td>
+          <td>{item.available ? item.available : '-'}</td>
+          <td>{item.sold ? item.sold : '-'}</td>
+          <td>{item.defective ? item.defective : '-'}</td>
           <td>
             <div class="flex items-center justify-end">
               <button class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">

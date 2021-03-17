@@ -3,6 +3,7 @@
   import { form } from 'svelte-forms'
   import { post, get } from '../../../../commons/api'
   import chrome_fdate from '../../../../commons/chrome_fdate'
+  import fdate from '../../../../commons/fdate'
   import rupiah from '../../../../commons/rupiah'
   import '../../../../styles/jo-table.css'
   import ItemForm from './_comps/ItemForm.svelte'
@@ -24,8 +25,11 @@
     const items_total = items
       .map(it => (it.price - (it.price * it.discount)) * it.quantity )
       .reduce((a, b) => a + b, 0)
+    console.log(`items_total = ${items_total}`)
     const discounted = items_total - (items_total * discount)
+    console.log(`discounted = ${discounted}`)
     const taxed = discounted + (discounted * tax)
+    console.log(`taxed = ${taxed}`)
     return taxed
   }
 
@@ -87,6 +91,36 @@
     }
   }
 
+  async function save () {
+    let payload = {
+      supplier_id,
+      tax: `${tax}`,
+      created_at: (new Date(created_at)).toISOString(),
+      content,
+      status,
+      shipping: `${shipping}`,
+      discount: `${discount}`,
+      trans_status,
+      trans_mode,
+      items: items.map(it => ({
+        ...it,
+        price: `${it.price}`,
+        sale_price: `${it.sale_price}`,
+        discount: `${it.discount}`
+      }))
+    }
+    try {
+      const response = await post({
+        url: '/api/v1/purchase',
+        payload
+      })
+      console.log(response.data)
+    } catch (err) {
+      console.log(err)
+      alert('gagal menambah data pembelian')
+    }
+  }
+
   onMount(async () => {
     await load_supplier()
   })
@@ -97,7 +131,9 @@
     <div class="font-bold text-lg">pembelian / pembelian baru</div>
     <div class="flex-grow"></div>
     <button 
-      class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded py-1">
+      on:click={save}
+      class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded py-1"
+    >
       simpan
     </button>
   </div>
@@ -242,14 +278,16 @@
               <option value='ONLINE'>Online</option>
             </select>
             {#if $main_form.fields.trans_mode.errors.includes('required')}
-              <small class="block text-red-500 text-xs">mode harus diisi</small>
+              <small class="block text-red-500 text-xs">mode transaksi harus diisi</small>
             {/if}
           </div>
         </div>
 
         <div class="flex items-center mb-2">
           <label class="w-1/5">Nominal</label>
-          <input readonly value={nominal} class="w-3/5 border border-gray-300 rounded px-2 py-1" />
+          <div class="w-3/5">
+            <input value={nominal} class="border border-gray-300 rounded px-2 py-1" />
+          </div>
         </div>
 
       </div>
@@ -275,9 +313,9 @@
           <th>no.</th>
           <th>produk</th>
           <th>pcs</th>
-          <th>harga</th>
+          <th>harga beli</th>
+          <th>harga jual</th>
           <th>diskon</th>
-          <th>mrp</th>
           <th></th>
         </tr>
       </thead>
@@ -288,8 +326,8 @@
             <td>{item.product_title}</td>
             <td>{item.quantity}</td>
             <td>{rupiah(item.price)}</td>
+            <td>{item.sale_price}</td>
             <td>{item.discount}</td>
-            <td>{item.mrp}</td>
             <td>
               <div class="flex items-center justify-end">
                 <button 
