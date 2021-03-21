@@ -195,6 +195,7 @@
             {/if}
           </div>
         </div>
+
         <div class="flex items-center mb-2">
           <label class="w-1/5">Shipping</label>
           <div class="w-3/5">
@@ -211,6 +212,7 @@
             {/if}
           </div>
         </div>
+
         <div class="flex items-center">
           <label class="w-1/5">Diskon (%)</label>
           <div class="w-3/5">
@@ -240,6 +242,7 @@
           <textarea rows="5" bind:value={content} class="w-4/5 border border-gray-300 rounded px-2 py-1"></textarea>
         </div>
       </div>
+      
     </div>
   </div>
 

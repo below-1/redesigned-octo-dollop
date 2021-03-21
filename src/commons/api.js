@@ -59,14 +59,19 @@ export async function del (opts) {
   return response.json()
 }
 
-export async function put(path, payload) {
-  const response = await fetch(`${base_url}${path}`, {
+export async function put(opts) {
+  let url = new URL(`${base_url}${opts.url}`)
+  if (opts.params) {
+    Object.keys(opts.params).forEach(key => {
+      url.searchParams.append(key, opts.params[key])
+    })
+  }
+
+  const options = fetch_opts({
     method: 'PUT',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(opts.payload)
   })
+
+  const response = await fetch(url, options)
   return response.json()
 }

@@ -4,6 +4,7 @@
   import '../../../styles/jo-table.css'
   import { get, del } from '../../../commons/api'
   import rupiah from '../../../commons/rupiah'
+  import fdate from '../../../commons/fdate'
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
   import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
   import FaCogs from 'svelte-icons/fa/FaCogs.svelte'
@@ -64,11 +65,12 @@
   <table class="jo-table">
     <thead>
       <tr>
-        <th>customer</th>
+        <th>supplier</th>
+        <th>sub total</th>
         <th>total</th>
         <th>waktu</th>
         <th>keterangan</th>
-        <th>status</th>
+        <th>status pembayaran</th>
         <th></th>
       </tr>
     </thead>
@@ -76,14 +78,34 @@
       {#each items as item}
         <tr>
           <td>{item.user.first_name}</td>
+          <td>{rupiah(item.sub_total)}</td>
           <td>{rupiah(item.grand_total)}</td>
-          <td>{item.created_at}</td>
-          <td>{item.content}</td>
-          <td>{item.status}</td>
+          <td>{fdate(new Date(item.created_at))}</td>
+          <td>{item.content ? item.content : ''}</td>
+          <td>
+            {#if item.delay}
+              <div class="text-yellow-700 font-bold">utang</div>
+            {:else}
+              <div class="text-gren-700 font-bold">lunas</div>
+            {/if}
+          </td>
           <td>
           </td>
         </tr>
       {/each}
     </tbody>
   </table>
+
+  <div class="my-4">
+    {#each Array(total_page) as _, i}
+      <button
+        on:click={() => {
+          page = i;
+        }}
+        class="inline-block rounded px-2 py-1 text-center text-xs font-bold border border-gray-300 mr-2"
+      >
+        { i + 1 }
+      </button>
+    {/each}
+  </div>
 </div>

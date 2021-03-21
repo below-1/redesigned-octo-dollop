@@ -67,16 +67,16 @@
         <tr>
           <td>{i + 1}</td>
           <td>{item.title}</td>
-          <td>{item.meta_title}</td>
-          <td>{item.content}</td>
+          <td>{item.meta_title ? item.meta_title : ''}</td>
+          <td>{item.content ? item.content : '' }</td>
           <td>{item.total_product}</td>
           <td>
             <div class="flex items-center">
-              <button class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+              <a href={`/app/category/${item.id}/edit`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
                 <div class="w-3 h-3 text-blue-500">
                   <FaPencilAlt />
                 </div>
-              </button>
+              </a>
               <button 
                 on:click={() => {
                   on_delete(item.id)
