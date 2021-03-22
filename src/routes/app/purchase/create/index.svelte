@@ -2,6 +2,9 @@
   import { onMount } from 'svelte'
   import { form } from 'svelte-forms'
   import { post, get } from '../../../../commons/api'
+  import datetime_validator from '../../../../commons/datetime_validator'
+  import DateTimeInput from '../../../../components/DateTimeInput.svelte'
+  import Currency from '../../../../components/Currency.svelte'
   import chrome_fdate from '../../../../commons/chrome_fdate'
   import fdate from '../../../../commons/fdate'
   import rupiah from '../../../../commons/rupiah'
@@ -15,7 +18,7 @@
   let content = ''
   let shipping = 0
   let discount = 0
-  let created_at = chrome_fdate(new Date())
+  let created_at = new Date()
   let tax = 0
   let items = []
   let trans_status = null
@@ -68,6 +71,10 @@
     trans_mode: {
       value: trans_mode,
       validators: ['required']
+    },
+    created_at: {
+      value: created_at,
+      validators: [datetime_validator]
     }
   }))
 
@@ -115,6 +122,8 @@
         payload
       })
       console.log(response.data)
+      alert('sukses menambah data pembelian')
+      window.history.back()
     } catch (err) {
       console.log(err)
       alert('gagal menambah data pembelian')
@@ -144,7 +153,7 @@
 
       <div class="w-1/2 text-sm pr-2">
 
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-4">
           <label class="w-1/5">Pilih Supplier</label>
           <div class="w-3/5">
             <select 
@@ -162,7 +171,7 @@
           </div>
         </div>
 
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-4">
           <label class="w-1/5">Status Orderan</label>
           <div class="w-3/5">
             <select class="w-full border border-gray-300 rounded px-2 py-1" bind:value={status}>
@@ -179,13 +188,12 @@
           </div>
         </div>
 
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-4">
           <label class="w-1/5">Pajak</label>
           <div class="w-3/5">
             <input 
               bind:value={tax}
               type="number" 
-              step="0.1" 
               class="w-full border border-gray-300 rounded px-2 py-1" />
             {#if $main_form.fields.tax.errors.includes('required')}
               <small class="block text-red-500 text-xs">pajak harus diisi</small>
@@ -196,7 +204,7 @@
           </div>
         </div>
 
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-4">
           <label class="w-1/5">Shipping</label>
           <div class="w-3/5">
             <input 
@@ -233,10 +241,19 @@
       </div>
 
       <div class="w-1/2 text-sm pl-2">
-        <div class="flex items-center mb-2">
-          <label class="w-1/5">Waktu Pembelian</label>
-          <input bind:value={created_at} type="datetime-local" class="w-3/5 border border-gray-300 rounded px-2 py-1" />
+
+        <div class="mb-4">
+          <label class="">Waktu Pembelian</label>
+          <div class="w-3/5">
+            <DateTimeInput
+              bind:date={created_at} 
+            />
+          </div>
+          {#if $main_form.fields.created_at.errors.includes('datetime')}
+            <small class="block text-red-500 text-xs">waktu pembelian tidak valid</small>
+          {/if}
         </div>
+
         <div class="flex flex-col">
           <label>Keterangan</label>
           <textarea rows="5" bind:value={content} class="w-4/5 border border-gray-300 rounded px-2 py-1"></textarea>

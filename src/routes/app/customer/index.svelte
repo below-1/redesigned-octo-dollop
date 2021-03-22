@@ -113,11 +113,11 @@
           <td>{item.mobile ? item.mobile : ''}</td>
           <td>
             <div class="flex items-center">
-              <button class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+              <a href={`/app/customer/${item.id}/edit`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
                 <div class="w-3 h-3 text-blue-500">
                   <FaPencilAlt />
                 </div>
-              </button>
+              </a>
               <button 
                 on:click={() => {
                   on_delete(item.id)

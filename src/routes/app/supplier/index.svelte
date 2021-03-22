@@ -111,16 +111,18 @@
         <tr>
           <td>{(i + 1) + (page * per_page)}</td>
           <td>{item.first_name}</td>
-          <td>{item.address}</td>
-          <td>{item.email}</td>
-          <td>{item.mobile}</td>
+          <td>{item.address ? item.address : ''}</td>
+          <td>{item.email ? item.email : ''}</td>
+          <td>{item.mobile ? item.mobile : ''}</td>
           <td>
             <div class="flex items-center">
-              <button class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+              <a 
+                href={`/app/supplier/${item.id}/edit`}
+                class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
                 <div class="w-3 h-3 text-blue-500">
                   <FaPencilAlt />
                 </div>
-              </button>
+              </a>
               <button 
                 on:click={() => {
                   on_delete(item.id)

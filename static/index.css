@@ -11514,8 +11514,7 @@ video {
 }
 
 .text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
+  font-size: 0.9rem;
 }
 
 .text-lg {
@@ -40201,8 +40200,7 @@ video {
   }
 
   .sm\:text-base {
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 0.9rem;
   }
 
   .sm\:text-lg {
@@ -68845,8 +68843,7 @@ video {
   }
 
   .md\:text-base {
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 0.9rem;
   }
 
   .md\:text-lg {
@@ -97489,8 +97486,7 @@ video {
   }
 
   .lg\:text-base {
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 0.9rem;
   }
 
   .lg\:text-lg {
@@ -126133,8 +126129,7 @@ video {
   }
 
   .xl\:text-base {
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 0.9rem;
   }
 
   .xl\:text-lg {
@@ -154777,8 +154772,7 @@ video {
   }
 
   .\32xl\:text-base {
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 0.9rem;
   }
 
   .\32xl\:text-lg {

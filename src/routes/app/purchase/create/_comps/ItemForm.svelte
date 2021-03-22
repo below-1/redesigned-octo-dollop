@@ -1,13 +1,19 @@
 <script>
   import { onMount, createEventDispatcher } from 'svelte'
   import { get, del } from '../../../../../commons/api'
+  import rupiah from '../../../../../commons/rupiah'
   import FaRegTimesCircle from 'svelte-icons/fa/FaRegTimesCircle.svelte'
+  import Currency from '../../../../../components/Currency.svelte'
+  import { form } from 'svelte-forms'
 
   const dispatch = createEventDispatcher()
 
   export let items
   export let initial = null
   export let edit = false
+
+  let money = 0
+  $: fmoney = rupiah(money)
 
   let product_id = null
   let quantity = 0
@@ -17,6 +23,32 @@
   let sale_price = 0
   let discount = 0
   let products = []
+
+  const item_form = form(() => ({
+    product_id: {
+      value: product_id,
+      validators: ['required']
+    },
+    quantity: {
+      value: quantity,
+      validators: ['required', 'min:1']
+    },
+    available: {
+      value: available,
+      validators: ['required', 'min:0']
+    },
+    price: {
+      value: price,
+      validators: ['required', 'min:1']
+    },
+    sale_price: {
+      value: sale_price,
+      validators: ['required', 'min:1', (v) => ({
+        valid: sale_price > price,
+        name: 'sp'
+      })]
+    }
+  }))
 
   $: product_ids = items.map(item => item.product_id)
   $: free_products = products.filter(product => {
@@ -109,20 +141,39 @@
               {/each}
             </select>
           {/if}
+          {#if $item_form.fields.product_id.errors.includes('required')}
+            <small class="block text-red-500 text-xs">produk harus diisi</small>
+          {/if}
         </div>
       </div>
 
       <div class="flex items-center mb-4">
         <label class="w-1/3">Harga (Rp.)</label>
-        <div class="w-2/3">
-          <input bind:value={price} class="w-full border border-gray-300 rounded px-2 py-1" />
+        <div class="w-2/3 flex flex-col">
+          <Currency 
+            bind:value={price} cls="py-1" 
+          />
+          {#if $item_form.fields.price.errors.includes('required')}
+            <small class="block text-red-500 text-xs">harga harus diisi</small>
+          {/if}
+          {#if $item_form.fields.price.errors.includes('min')}
+            <small class="block text-red-500 text-xs">harga tidak boleh kurang dari 1</small>
+          {/if}
         </div>
       </div>
 
       <div class="flex items-center mb-4">
         <label class="w-1/3">Harga Jual(Rp.)</label>
         <div class="w-2/3">
-          <input bind:value={sale_price} class="w-full border border-gray-300 rounded px-2 py-1" />
+          <Currency 
+            bind:value={sale_price} cls="py-1" 
+          />
+          {#if $item_form.fields.sale_price.errors.includes('required')}
+            <small class="block text-red-500 text-xs">harga jual harus diisi</small>
+          {/if}
+          {#if $item_form.fields.sale_price.errors.includes('sp')}
+            <small class="block text-red-500 text-xs">harga jual harus lebih besar atau sama dengan harga beli</small>
+          {/if}
         </div>
       </div>
 
