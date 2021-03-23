@@ -24,6 +24,27 @@
   let discount = 0
   let products = []
 
+  const available_valid = (x) => {
+    console.log('defective = ', defective)
+    console.log('available = ', available)
+    console.log('quantity = ', available)
+    const tot = x + defective
+    const valid = tot == quantity
+    return {
+      valid,
+      name: 'av_valid'
+    }
+  }
+
+  const defective_valid = (x) => {
+    const tot = x + available
+    const valid = tot == quantity
+    return {
+      valid,
+      name: 'de_valid'
+    }
+  }
+
   const item_form = form(() => ({
     product_id: {
       value: product_id,
@@ -47,6 +68,18 @@
         valid: sale_price > price,
         name: 'sp'
       })]
+    },
+    quantity: {
+      value: quantity,
+      validators: ['required', 'min:0']
+    },
+    available: {
+      value: available,
+      validators: ['required', 'min:0', available_valid]
+    },
+    defective: {
+      value: defective,
+      validators: ['required', 'min:0', defective_valid]
     }
   }))
 
@@ -103,7 +136,8 @@
         <div class="flex-grow"></div>
         <button 
           on:click={save}
-          class="appearance-none border-2 border-green-500 px-4 py-1 flex items-center font-bold rounded mr-4"
+          disabled={!$item_form.valid}
+          class="appearance-none border-2 border-green-500 px-4 py-1 flex items-center font-bold rounded mr-4 disabled:opacity-50"
         >
           simpan
         </button>
@@ -180,21 +214,48 @@
       <div class="flex items-center mb-4">
         <label class="w-1/3">Qty</label>
         <div class="w-2/3">
-          <input bind:value={quantity} class="w-full border border-gray-300 rounded px-2 py-1" />
+          <input 
+            type="number"
+            bind:value={quantity} 
+            class="w-full border border-gray-300 rounded px-2 py-1" />
+          {#if $item_form.fields.quantity.errors.includes('required')}
+            <small class="block text-red-500 text-xs">pcs barang harus diisi</small>
+          {/if}
+          {#if $item_form.fields.quantity.errors.includes('min')}
+            <small class="block text-red-500 text-xs">pcs barang tidak boleh kurang dari 1</small>
+          {/if}
         </div>
       </div>
 
       <div class="flex items-center mb-4">
         <label class="w-1/3">Qty kondisi baik</label>
         <div class="w-2/3">
-          <input bind:value={available} class="w-full border border-gray-300 rounded px-2 py-1" />
+          <input type="number" bind:value={available} class="w-full border border-gray-300 rounded px-2 py-1" />
+          {#if $item_form.fields.available.errors.includes('required')}
+            <small class="block text-red-500 text-xs">pcs barang kondisi baik harus diisi</small>
+          {/if}
+          {#if $item_form.fields.available.errors.includes('min')}
+            <small class="block text-red-500 text-xs">pcs barang kondisi baik tidak boleh kurang dari 0</small>
+          {/if}
+          {#if $item_form.fields.available.errors.includes('av_valid')}
+            <small class="block text-red-500 text-xs">pcs baik + pcs rusak = total pcs</small>
+          {/if}
         </div>
       </div>
 
       <div class="flex items-center mb-4">
         <label class="w-1/3">Qty kondisi rusak</label>
         <div class="w-2/3">
-          <input bind:value={defective} class="w-full border border-gray-300 rounded px-2 py-1" />
+          <input type="number" bind:value={defective} class="w-full border border-gray-300 rounded px-2 py-1" />
+          {#if $item_form.fields.defective.errors.includes('required')}
+            <small class="block text-red-500 text-xs">pcs barang kondisi rusak harus diisi</small>
+          {/if}
+          {#if $item_form.fields.defective.errors.includes('min')}
+            <small class="block text-red-500 text-xs">pcs barang kondisi rusak tidak boleh kurang dari 0</small>
+          {/if}
+          {#if $item_form.fields.defective.errors.includes('de_valid')}
+            <small class="block text-red-500 text-xs">pcs baik + pcs rusak = total pcs</small>
+          {/if}
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte'
   import { form } from 'svelte-forms'
+  import { addDays, format } from 'date-fns'
   import { post, get } from '../../../../commons/api'
   import datetime_validator from '../../../../commons/datetime_validator'
   import DateTimeInput from '../../../../components/DateTimeInput.svelte'
@@ -23,20 +24,34 @@
   let items = []
   let trans_status = null
   let trans_mode = null
+  let trans_nominal = 0
+  let delay_due_date = null
+
+  function calculate_sub_total ({ items }) {
+    return items.map(it => (it.price - (it.price * it.discount)) * it.quantity).reduce((a,b) => a + b, 0)
+  }
 
   function calculate_grand_total ({ items, tax, discount, shipping }) {
     const items_total = items
-      .map(it => (it.price - (it.price * it.discount)) * it.quantity )
+      .map(it => (it.sale_price - (it.sale_price * it.discount)) * it.quantity )
       .reduce((a, b) => a + b, 0)
-    console.log(`items_total = ${items_total}`)
     const discounted = items_total - (items_total * discount)
-    console.log(`discounted = ${discounted}`)
     const taxed = discounted + (discounted * tax)
-    console.log(`taxed = ${taxed}`)
     return taxed
   }
 
-  $: nominal = rupiah(calculate_grand_total({ items, tax, discount, shipping }))
+  $: sub_total = calculate_sub_total({ items })
+  $: grand_total = calculate_grand_total({ items, tax, discount, shipping })
+  $: total_ap = grand_total - trans_nominal
+  $: need_delay = total_ap > 0
+
+  function format_due_date ({ need_delay, created_at, delay_due_date }) {
+    if (!need_delay) return '-'
+    if (!delay_due_date) return '-'
+    const new_date = addDays(created_at, delay_due_date)
+    return fdate(new_date)
+  }
+  $: formatted_due_date = format_due_date ({ need_delay, created_at, delay_due_date })
 
   let suppliers = []
   let show_add_form = false
@@ -72,11 +87,44 @@
       value: trans_mode,
       validators: ['required']
     },
+    trans_nominal: {
+      value: trans_nominal,
+      validators: ['required', 'min:0', (x) => {
+        const valid = x <= grand_total
+        return {
+          valid,
+          name: 'max'
+        }
+      }]
+    },
     created_at: {
       value: created_at,
       validators: [datetime_validator]
+    },
+    delay: {
+      value: delay_due_date,
+      validators: [(x) => {
+        if (!need_delay) return {
+          valid: true,
+          name: 'required'
+        }
+        if (x === null || x === undefined) return {
+          valid: false,
+          name: 'required'
+        }
+        if (x < 1) return {
+          valid: false,
+          name: 'min'
+        }
+        return {
+          valid: true,
+          name: 'min'
+        }
+      }]
     }
   }))
+
+  $: form_valid = $main_form.valid && items.length > 0
 
   function edit_item (product_id) {
     let item = items.find(it => it.product_id == product_id)
@@ -102,13 +150,15 @@
     let payload = {
       supplier_id,
       tax: `${tax}`,
-      created_at: (new Date(created_at)).toISOString(),
+      created_at: (new Date(created_at)),
       content,
       status,
       shipping: `${shipping}`,
       discount: `${discount}`,
       trans_status,
       trans_mode,
+      trans_nominal,
+      delay_due_date,
       items: items.map(it => ({
         ...it,
         price: `${it.price}`,
@@ -141,7 +191,8 @@
     <div class="flex-grow"></div>
     <button 
       on:click={save}
-      class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded py-1"
+      disabled={!form_valid}
+      class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded py-1 disabled:opacity-50"
     >
       simpan
     </button>
@@ -263,13 +314,13 @@
     </div>
   </div>
 
-  <div class="bg-white px-4 mb-4 py-2">
-    <div class="font-semibold mb-4">Form Transaksi</div>
-    <div class="flex">
-      <div class="w-1/2 text-sm pr-2">
+  <div class="flex">
+    <div class="bg-white px-4 mb-4 py-2 w-1/2 mr-2">
+      <div class="font-semibold mb-4">Form Transaksi</div>
+      <div class="text-sm">
 
-        <div class="flex items-center mb-2">
-          <label class="w-1/5">Status Transaksi</label>
+        <div class="flex items-center mb-3">
+          <label class="w-1/5 text-xs">Status Transaksi</label>
           <div class="w-3/5">
             <select bind:value={trans_status} class="w-full border border-gray-300 rounded px-2 py-1">
               <option disabled value={null}>-- pilih status transaksi --</option>
@@ -285,8 +336,8 @@
           </div>
         </div>
 
-        <div class="flex items-center mb-2">
-          <label class="w-1/5">Mode Pembayaran</label>
+        <div class="flex items-center mb-3">
+          <label class="w-1/5 text-xs">Mode Pembayaran</label>
           <div class="w-3/5">
             <select bind:value={trans_mode} class="w-full border border-gray-300 rounded px-2 py-1">
               <option disabled value={null}>-- pilih mode transaksi --</option>
@@ -303,15 +354,47 @@
           </div>
         </div>
 
-        <div class="flex items-center mb-2">
-          <label class="w-1/5">Nominal</label>
+        <div class="flex items-center mb-3">
+          <label class="w-1/5 text-xs">Nominal</label>
           <div class="w-3/5">
-            <input value={nominal} class="border border-gray-300 rounded px-2 py-1" />
+            <Currency bind:value={trans_nominal} />
+            {#if $main_form.fields.trans_nominal.errors.includes('required')}
+              <small class="block text-red-500 text-xs">nominal pembayaran harus diisi</small>
+            {/if}
+            {#if $main_form.fields.trans_nominal.errors.includes('min')}
+              <small class="block text-red-500 text-xs">nominal pembayaran harus lebih besar dari 0</small>
+            {/if}
+            {#if $main_form.fields.trans_nominal.errors.includes('max')}
+              <small class="block text-red-500 text-xs">nominal pembayaran tidak boleh besar dari grand total</small>
+            {/if}
           </div>
         </div>
 
       </div>
     </div>
+
+    {#if need_delay}
+      <div class="bg-white px-4 mb-4 py-2 w-1/2 ml-2">
+        <div class="font-semibold mb-4">Form Hutang</div>
+        <div class="text-sm mb-4 border-gray-200 rounded border bg-gray-100 p-4">
+          <p class="text-red-700 font-bold text-sm">Nominal pembayaran kurang dari grand total</p>
+          <p class="text-red-700 font-bold text-sm">Sistem akan menyimpan data hutang sesuai dengan kekurangan pembayaran</p>
+        </div>
+        <div class="mb-4 text-sm">Total Hutang: <em class="font-mono font-bold text-xs">{rupiah(total_ap)}</em></div>
+        <label class="text-sm">Batas Waktu (Hari)</label>
+        <input 
+          bind:value={delay_due_date}
+          type="number" 
+          class="w-full border border-gray-300 rounded px-2 py-1" />
+        {#if need_delay && $main_form.fields.delay.errors.includes('required')}
+          <small class="block text-red-500 text-xs">batas waktu pembayaran hutang harus diisi</small>
+        {/if}
+        {#if need_delay && $main_form.fields.delay.errors.includes('min')}
+          <small class="block text-red-500 text-xs">batas waktu pembayaran hutang harus lebih besar dari</small>
+        {/if}
+        <div class="mb-4 text-sm">Tanggal Bayar: <em class="font-mono font-bold text-xs">{formatted_due_date}</em></div>
+      </div>
+    {/if}
   </div>
 
   <div class="bg-white px-4 mb-4 py-2">
@@ -373,6 +456,14 @@
             </td>
           </tr>
         {/each}
+        <tr>
+          <td colspan="6">sub total</td>
+          <td>{rupiah(sub_total)}</td>
+        </tr>
+        <tr>
+          <td colspan="6">grand total</td>
+          <td>{rupiah(grand_total)}</td>
+        </tr>
       </tbody>
     </table>
   </div>
