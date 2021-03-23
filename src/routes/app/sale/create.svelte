@@ -41,6 +41,8 @@
 
   $: sub_total = calculate_sub_total({ items })
   $: grand_total = calculate_grand_total({ items, tax, discount, shipping })
+  $: total_ap = grand_total - trans_nominal
+  $: need_delay = total_ap > 0
 
   let customers = []
   let show_add_form = false
@@ -81,6 +83,8 @@
       validators: ['required']
     }
   }))
+
+  $: form_valid = $main_form.valid && items.length > 0
 
   async function load_customer () {
     try {
@@ -134,7 +138,8 @@
     <div class="flex-grow"></div>
     <button 
       on:click={save}
-      class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded py-1"
+      disabled={!form_valid}
+      class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded py-1 disabled:opacity-50"
     >
       simpan
     </button>
@@ -146,7 +151,7 @@
 
       <div class="w-1/2 text-sm pr-2">
 
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-4">
           <label class="w-1/5">Pilih Pelanggan</label>
           <div class="w-3/5">
             <select 
@@ -164,7 +169,7 @@
           </div>
         </div>
 
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-4">
           <label class="w-1/5">Status Orderan</label>
           <div class="w-3/5">
             <select class="w-full border border-gray-300 rounded px-2 py-1" bind:value={status}>
@@ -181,7 +186,7 @@
           </div>
         </div>
 
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-4">
           <label class="w-1/5">Pajak</label>
           <div class="w-3/5">
             <input 
@@ -198,7 +203,7 @@
           </div>
         </div>
 
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-4">
           <label class="w-1/5">Shipping</label>
           <div class="w-3/5">
             <input 
