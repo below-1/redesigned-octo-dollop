@@ -6,6 +6,7 @@
 
 <script>
   import { onMount } from 'svelte'
+  import { form } from 'svelte-forms'
   import rupiah from '../../../../commons/rupiah'
   import { put, get } from '../../../../commons/api'
   import '../../../../styles/jo-table.css'
@@ -22,6 +23,22 @@
 
   let order_status = null
   let transaction_status = null
+  let transaction_mode = null
+
+  const update_form = form(() => ({
+    transaction_status: {
+      value: transaction_status,
+      validators: ['required']
+    },
+    transaction_mode: {
+      value: transaction_mode,
+      validators: ['required']
+    },
+    order_status: {
+      value: order_status,
+      validators: ['required']
+    }
+  }))
 
   function calculate_sub_total ({ items }) {
     return items.map(it => (it.price - (it.price * it.discount)) * it.quantity).reduce((a,b) => a + b, 0)
@@ -50,6 +67,7 @@
 
       order_status = order.status
       transaction_status = transaction.status
+      transaction_mode = transaction.mode
     } catch (err) {
       console.log(err)
       alert('gagal mengambil data penjualan')
@@ -57,7 +75,21 @@
   }
 
   async function save () {
-
+    const payload = {
+      order_status,
+      transaction_status,
+      transaction_mode
+    }
+    const url = `/api/v1/purchase/${id}`
+    try {
+      const result = await put({
+        url,
+        payload
+      })
+      console.log()
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   onMount(() => {
@@ -139,7 +171,21 @@
         <option value='SUCCESS'>Sukses</option>
       </select>
     </div>
-    <button class="primary">simpan</button>
+
+    <div class="mb-4 hor-field">
+      <label>mode pembayaran:</label>
+      <select bind:value={transaction_mode}>
+        <option disabled value={null}>-- pilih mode transaksi --</option>
+        <option value='OFFLINE'>Offline</option>
+        <option value='CASH'>Kes</option>
+        <option value='ON_DELIVERY'>On Delivery</option>
+        <option value='CHEQUE_DRAFT'>Cheque</option>
+        <option value='WIRED'>Wired</option>
+        <option value='ONLINE'>Online</option>
+      </select>
+    </div>
+
+    <button :disabled={!$update_form.valid} on:click={save} class="primary disabled:opacity-50">simpan</button>
   </section>
 
   <section class="flex">
