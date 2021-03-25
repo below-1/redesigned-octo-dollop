@@ -1,114 +1,151 @@
 <script>
   import { onMount } from 'svelte'
   import { form } from 'svelte-forms'
+  import { addDays, format } from 'date-fns'
   import { post, get } from '../../../commons/api'
+  import datetime_validator from '../../../commons/datetime_validator'
   import chrome_fdate from '../../../commons/chrome_fdate'
   import fdate from '../../../commons/fdate'
   import rupiah from '../../../commons/rupiah'
   import '../../../styles/jo-table.css'
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
   import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
+  import OrderForm from '../_comps/OrderForm.svelte'
+  import OrderTransactionForm from '../_comps/OrderTransactionForm.svelte'
   import OrderItemForm  from './_comps/OrderItemForm.svelte'
 
-  let customer_id = null
-  let tax = 0
-  let discount = 0
-  let shipping = 0
-  let content = null
-  let created_at = chrome_fdate(new Date())
-  let status = null
-  let trans_status = null
-  let trans_mode = null
-  let trans_nominal = 0
-  let delay_due_date = null
+  let order = {
+    user_id: null,
+    status: null,
+    content: '',
+    shipping: 0,
+    discount: 0,
+    tax: 0,
+    created_at: new Date()
+  }
+  let transaction = {
+    status: null,
+    mode: null,
+    nominal: 0,
+    delay_due_date: null
+  }
   let items = []
 
   function calculate_sub_total ({ items }) {
-    return items.map(it => (it.price - (it.price * it.discount)) * it.quantity).reduce((a,b) => a + b, 0)
+    return items.map(it => (it.sale_price - (it.sale_price * it.discount)) * it.quantity).reduce((a,b) => a + b, 0)
   }
 
-  function calculate_grand_total ({ items, tax, discount, shipping }) {
+  function calculate_grand_total ({ items, order }) {
+    const { discount, tax, shipping } = order
     const items_total = items
       .map(it => (it.sale_price - (it.sale_price * it.discount)) * it.quantity )
       .reduce((a, b) => a + b, 0)
-    console.log(`items_total = ${items_total}`)
     const discounted = items_total - (items_total * discount)
-    console.log(`discounted = ${discounted}`)
     const taxed = discounted + (discounted * tax)
-    console.log(`taxed = ${taxed}`)
     return taxed
   }
 
   $: sub_total = calculate_sub_total({ items })
-  $: grand_total = calculate_grand_total({ items, tax, discount, shipping })
-  $: total_ap = grand_total - trans_nominal
+  $: grand_total = calculate_grand_total({ items, order })
+  $: total_ap = grand_total - transaction.nominal
+  $: formatted_total_ap = rupiah(total_ap)
   $: need_delay = total_ap > 0
 
-  let customers = []
+  function format_due_date ({ need_delay, order, transaction }) {
+    const { created_at } = order
+    const { delay_due_date } = transaction
+    if (!need_delay) return '-'
+    if (!delay_due_date) return '-'
+    const new_date = addDays(created_at, delay_due_date)
+    return fdate(new_date)
+  }
+  $: formatted_due_date = format_due_date ({ need_delay, order, transaction })
+
   let show_add_form = false
   let show_edit_form = false
   let edit_item_data = {}
 
   let main_form = form(() => ({
-    customer_id: {
-      value: customer_id,
+    user_id: {
+      value: order.user_id,
       validators: ['required']
     },
     status: {
-      value: status,
+      value: order.status,
       validators: ['required']
     },
     shipping: {
-      value: shipping,
+      value: order.shipping,
       validators: ['required', 'min:0'],
     },
     discount: {
-      value: discount,
+      value: order.discount,
       validators: ['required', 'min:0']
     },
     tax: {
-      value: tax,
+      value: order.tax,
       validators: ['required', 'min:0']
     },
+    created_at: {
+      value: order.created_at,
+      validators: [datetime_validator]
+    },
     trans_status: {
-      value: trans_status,
+      value: transaction.status,
       validators: ['required']
     },
     trans_mode: {
-      value: trans_mode,
+      value: transaction.mode,
       validators: ['required']
     },
     trans_nominal: {
-      value: trans_nominal,
-      validators: ['required']
+      value: transaction.nominal,
+      validators: ['required', 'min:0', (x) => {
+        const valid = x <= grand_total
+        return {
+          valid,
+          name: 'max'
+        }
+      }]
+    },
+    delay: {
+      value: transaction.delay_due_date,
+      validators: [(x) => {
+        if (!need_delay) return {
+          valid: true,
+          name: 'required'
+        }
+        if (x === null || x === undefined) return {
+          valid: false,
+          name: 'required'
+        }
+        if (x < 1) return {
+          valid: false,
+          name: 'min'
+        }
+        return {
+          valid: true,
+          name: 'min'
+        }
+      }]
     }
   }))
 
   $: form_valid = $main_form.valid && items.length > 0
 
-  async function load_customer () {
-    try {
-      const result = await get({ url: '/api/v1/customer' })
-      customers = result.items
-    } catch (err) {
-      console.log(err)
-      alert('gagal mengambil data customer')
-    }
-  }
-
   async function save () {
     let payload = {
-      customer_id,
-      tax,
-      discount,
-      shipping,
-      status,
-      trans_mode,
-      trans_status,
-      trans_nominal,
-      created_at: (new Date(created_at)).toISOString(),
-      content,
-      delay_due_date: `${delay_due_date}`,
+      customer_id: order.user_id,
+      tax: `${order.tax}`,
+      created_at: (new Date(order.created_at)),
+      content: order.created_at,
+      status: order.status,
+      shipping: `${order.shipping}`,
+      discount: `${order.discount}`,
+      trans_status: transaction.status,
+      trans_mode: transaction.mode,
+      trans_nominal: transaction.nominal,
+      delay_due_date: transaction.delay_due_date,
       items: items.map(it => ({
         product_id: it.product_id,
         item_id: it.item_id,
@@ -126,10 +163,6 @@
       alert('gagal menambah data penjualan')
     }
   }
-
-  onMount(async () => {
-    await load_customer()
-  })
 </script>
 
 <div>
@@ -145,178 +178,19 @@
     </button>
   </div>
 
-  <div class="bg-white px-4 mb-4 py-2">
-    <div class="font-semibold mb-4">Form Order</div>
-    <div class="flex">
+  <OrderForm 
+    type="SALE"
+    bind:order={order}
+    validation={$main_form}
+  />
 
-      <div class="w-1/2 text-sm pr-2">
-
-        <div class="flex items-center mb-4">
-          <label class="w-1/5">Pilih Pelanggan</label>
-          <div class="w-3/5">
-            <select 
-              bind:value={customer_id} 
-              class="w-full border border-gray-300 rounded px-2 py-1"
-            >
-              <option disabled value={null}>--  pilih pelanggan --</option>
-              {#each customers as customer}
-                <option value={customer.id}>{customer.first_name}</option>
-              {/each}
-            </select>
-            {#if $main_form.fields.customer_id.errors.includes('required')}
-              <small class="block text-red-500 text-xs">pelanggan harus diisi</small>
-            {/if}
-          </div>
-        </div>
-
-        <div class="flex items-center mb-4">
-          <label class="w-1/5">Status Orderan</label>
-          <div class="w-3/5">
-            <select class="w-full border border-gray-300 rounded px-2 py-1" bind:value={status}>
-              <option disabled value={null}>--  pilih status orderan --</option>
-              <option value='CHECKOUT'>Checkout</option>
-              <option value='PAID'>Sudah Dibayar</option>
-              <option value='DELIVERED'>Barang Diterima</option>
-              <option value='RETURNED'>Retur</option>
-              <option value='COMPLETE'>Selesai</option>
-            </select>
-            {#if $main_form.fields.status.errors.includes('required')}
-              <small class="block text-red-500 text-xs">status orderan harus diisi</small>
-            {/if}
-          </div>
-        </div>
-
-        <div class="flex items-center mb-4">
-          <label class="w-1/5">Pajak</label>
-          <div class="w-3/5">
-            <input 
-              bind:value={tax}
-              type="number" 
-              step="0.1" 
-              class="w-full border border-gray-300 rounded px-2 py-1" />
-            {#if $main_form.fields.tax.errors.includes('required')}
-              <small class="block text-red-500 text-xs">pajak harus diisi</small>
-            {/if}
-            {#if $main_form.fields.tax.errors.includes('min')}
-              <small class="block text-red-500 text-xs">tidak boleh kurang dari 0</small>
-            {/if}
-          </div>
-        </div>
-
-        <div class="flex items-center mb-4">
-          <label class="w-1/5">Shipping</label>
-          <div class="w-3/5">
-            <input 
-              bind:value={shipping}
-              type="number" 
-              class="w-full border border-gray-300 rounded px-2 py-1" />
-            {#if $main_form.fields.shipping
-              .errors.includes('required')}
-              <small class="block text-red-500 text-xs">biaya pengiriman harus diisi</small>
-            {/if}
-            {#if $main_form.fields.shipping.errors.includes('min')}
-              <small class="block text-red-500 text-xs">tidak boleh kurang dari 0</small>
-            {/if}
-          </div>
-        </div>
-        
-        <div class="flex items-center">
-          <label class="w-1/5">Diskon (%)</label>
-          <div class="w-3/5">
-            <input 
-              bind:value={discount}
-              type="number" 
-              class="w-full border border-gray-300 rounded px-2 py-1" />
-            {#if $main_form.fields.discount
-              .errors.includes('required')}
-              <small class="block text-red-500 text-xs">diskon harus diisi</small>
-            {/if}
-            {#if $main_form.fields.discount.errors.includes('min')}
-              <small class="block text-red-500 text-xs">tidak boleh kurang dari 0</small>
-            {/if}
-          </div>
-        </div>
-
-      </div>
-
-      <div class="w-1/2 text-sm pl-2">
-        <div class="flex items-center mb-2">
-          <label class="w-1/5">Waktu Pembelian</label>
-          <input bind:value={created_at} type="datetime-local" class="w-3/5 border border-gray-300 rounded px-2 py-1" />
-        </div>
-        <div class="flex flex-col">
-          <label>Keterangan</label>
-          <textarea rows="5" bind:value={content} class="w-4/5 border border-gray-300 rounded px-2 py-1"></textarea>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="bg-white px-4 mb-4 py-2">
-    <div class="font-semibold mb-4">Form Transaksi</div>
-    <div class="flex">
-      <div class="w-1/2 text-sm pr-2">
-
-        <div class="flex items-center mb-2">
-          <label class="w-1/5">Status Transaksi</label>
-          <div class="w-3/5">
-            <select bind:value={trans_status} class="w-full border border-gray-300 rounded px-2 py-1">
-              <option disabled value={null}>-- pilih status transaksi --</option>
-              <option value='PENDING'>Sedang Diproses</option>
-              <option value='CANCELLED'>Dibatalkan</option>
-              <option value='FAILED'>Gagal</option>
-              <option value='REJECTED'>Ditolak</option>
-              <option value='SUCCESS'>Sukses</option>
-            </select>
-            {#if $main_form.fields.trans_status.errors.includes('required')}
-              <small class="block text-red-500 text-xs">status harus diisi</small>
-            {/if}
-          </div>
-        </div>
-
-        <div class="flex items-center mb-2">
-          <label class="w-1/5">Mode Pembayaran</label>
-          <div class="w-3/5">
-            <select bind:value={trans_mode} class="w-full border border-gray-300 rounded px-2 py-1">
-              <option disabled value={null}>-- pilih mode transaksi --</option>
-              <option value='OFFLINE'>Offline</option>
-              <option value='CASH'>Kes</option>
-              <option value='ON_DELIVERY'>On Delivery</option>
-              <option value='CHEQUE_DRAFT'>Cheque</option>
-              <option value='WIRED'>Wired</option>
-              <option value='ONLINE'>Online</option>
-            </select>
-            {#if $main_form.fields.trans_mode.errors.includes('required')}
-              <small class="block text-red-500 text-xs">mode transaksi harus diisi</small>
-            {/if}
-          </div>
-        </div>
-
-        <div class="flex items-center mb-2">
-          <label class="w-1/5">Nominal</label>
-          <div class="w-3/5">
-            <input 
-              placeholder={grand_total} 
-              bind:value={trans_nominal} class="border border-gray-300 rounded px-2 py-1" />
-          </div>
-        </div>
-
-        {#if trans_nominal < grand_total}
-          <div class="flex items-center mb-2">
-            <label class="w-1/5">batas waktu (hari)</label>
-            <div class="w-3/5">
-              <input 
-                type="number"
-                bind:value={delay_due_date}
-                class="border border-gray-300 rounded px-2 py-1" />
-            </div>
-          </div>
-        {/if}
-
-      </div>
-    </div>
-  </div>
+  <OrderTransactionForm
+    bind:transaction={transaction}
+    validation={$main_form}
+    delay={need_delay}
+    {formatted_due_date}
+    {formatted_total_ap}
+  />
 
   <div class="bg-white px-4 mb-4 py-2">
     <div class="flex items-center">
