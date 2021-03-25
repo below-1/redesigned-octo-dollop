@@ -55,9 +55,9 @@
 <div class="cont">
 
   <section class="header flex my-4 text-sm">
-    <div class="flex mr-4">
-      <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">total data</div>
-      <div class="bg-blue-600 text-white font-bold flex items-center px-2">{items.length}</div>
+    <div class="title-count">
+      <div>total data</div>
+      <div>{items.length}</div>
     </div>
     <div class="border border-gray-400 flex items-stretch rounded mr-4">
       <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500 rounded-l">pencarian</div>

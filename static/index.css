@@ -29256,6 +29256,35 @@ button.primary {
   padding-right: 1rem;
 }
 
+.cont > section.header > .title-count {
+  display: flex;
+  margin-right: 1rem;
+}
+
+.cont > section.header > .title-count > div:first-child {
+  --tw-bg-opacity: 1;
+  background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.cont > section.header > .title-count > div:last-child {
+  --tw-bg-opacity: 1;
+  background-color: rgba(37, 99, 235, var(--tw-bg-opacity));
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;
