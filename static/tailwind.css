@@ -15,4 +15,8 @@
   .cont > section {
     @apply mb-4;
   }
+
+  .cont > section.header {
+    @apply px-4 py-2 bg-white;
+  }
 }

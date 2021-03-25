@@ -37,8 +37,9 @@
   onMount(load_category)
 </script>
 
-<div class="bg-white p-4">
-  <div class="flex my-4 text-sm">
+<div class="cont">
+
+  <section class="header flex text-sm">
     <div class="flex mr-4">
       <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">total data</div>
       <div class="bg-blue-600 text-white font-bold flex items-center px-2">{items.length}</div>
@@ -50,46 +51,49 @@
     <a href="/app/category/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
       tambah kategori
     </a>
-  </div>
-  <table class="jo-table">
-    <thead>
-      <tr>
-        <th>no.</th>
-        <th>nama</th>
-        <th>rangkuman</th>
-        <th>keterangan</th>
-        <th>produk</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each items as item, i}
+  </section>
+
+  <section>
+    <table class="jo-table">
+      <thead>
         <tr>
-          <td>{i + 1}</td>
-          <td>{item.title}</td>
-          <td>{item.meta_title ? item.meta_title : ''}</td>
-          <td>{item.content ? item.content : '' }</td>
-          <td>{item.total_product}</td>
-          <td>
-            <div class="flex items-center">
-              <a href={`/app/category/${item.id}/edit`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
-                <div class="w-3 h-3 text-blue-500">
-                  <FaPencilAlt />
-                </div>
-              </a>
-              <button 
-                on:click={() => {
-                  on_delete(item.id)
-                }}
-                class="appearance-none rounded-full p-1 hover:bg-gray-300">
-                <div class="w-3 h-3 text-red-500">
-                  <FaTrash />
-                </div>
-              </button>
-            </div>
-          </td>
+          <th>no.</th>
+          <th>nama</th>
+          <th>rangkuman</th>
+          <th>keterangan</th>
+          <th>produk</th>
+          <th></th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each items as item, i}
+          <tr>
+            <td>{i + 1}</td>
+            <td>{item.title}</td>
+            <td>{item.meta_title ? item.meta_title : ''}</td>
+            <td>{item.content ? item.content : '' }</td>
+            <td>{item.total_product}</td>
+            <td>
+              <div class="flex items-center">
+                <a href={`/app/category/${item.id}/edit`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-blue-500">
+                    <FaPencilAlt />
+                  </div>
+                </a>
+                <button 
+                  on:click={() => {
+                    on_delete(item.id)
+                  }}
+                  class="appearance-none rounded-full p-1 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-red-500">
+                    <FaTrash />
+                  </div>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </section>
 </div>
