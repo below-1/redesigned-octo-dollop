@@ -56,16 +56,16 @@
   // onMount(async () => await load_supplier({ keyword }))
 </script>
 
-<div class="bg-white p-4">
-  <div class="flex my-4 text-sm">
-    <div class="flex mr-4">
-      <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">total supplier</div>
-      <div class="bg-blue-600 text-white font-bold flex items-center px-2">{items.length}</div>
+<div class="cont">
+
+  <section class="header flex my-4 text-sm">
+    <div class="title-count">
+      <div>total supplier</div>
+      <div>{items.length}</div>
     </div>
-    <div class="border border-gray-400 flex items-stretch rounded mr-4">
-      <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500 rounded-l">pencarian</div>
+    <div class="group-input">
+      <label>pencarian</label>
       <input
-        class="font-thin rounded px-2 py-1"
         value={keyword}
         on:change={(event) => {
           page = 0
@@ -73,10 +73,9 @@
         }}
       />
     </div>
-    <div class="border border-gray-400 flex items-stretch rounded">
-      <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500 rounded-l">per halaman</div>
+    <div class="group-input">
+      <label>per halaman</label>
       <input
-        class="font-thin rounded px-2 py-1"
         value={per_page}
         type="number"
         min="10"
@@ -87,58 +86,61 @@
       />
     </div>
     <div class="flex-grow"></div>
-    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold rounded mr-4">
+    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold mr-4">
       print
     </button>
-    <a href="/app/supplier/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
+    <a href="/app/supplier/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold">
       tambah supplier
     </a>
-  </div>
+  </section>
 
-  <table class="jo-table">
-    <thead>
-      <tr>
-        <th>no.</th>
-        <th>nama</th>
-        <th>alamat</th>
-        <th>email</th>
-        <th>no. hp</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each items as item, i}
+  <section>
+    <table class="jo-table">
+      <thead>
         <tr>
-          <td>{(i + 1) + (page * per_page)}</td>
-          <td>{item.first_name}</td>
-          <td>{item.address ? item.address : ''}</td>
-          <td>{item.email ? item.email : ''}</td>
-          <td>{item.mobile ? item.mobile : ''}</td>
-          <td>
-            <div class="flex items-center">
-              <a 
-                href={`/app/supplier/${item.id}/edit`}
-                class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
-                <div class="w-3 h-3 text-blue-500">
-                  <FaPencilAlt />
-                </div>
-              </a>
-              <button 
-                on:click={() => {
-                  on_delete(item.id)
-                }}
-                class="appearance-none rounded-full p-1 hover:bg-gray-300">
-                <div class="w-3 h-3 text-red-500">
-                  <FaTrash />
-                </div>
-              </button>
-            </div>
-          </td>
+          <th>no.</th>
+          <th>nama</th>
+          <th>alamat</th>
+          <th>email</th>
+          <th>no. hp</th>
+          <th></th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
-  <div class="my-4">
+      </thead>
+      <tbody>
+        {#each items as item, i}
+          <tr>
+            <td>{(i + 1) + (page * per_page)}</td>
+            <td>{item.first_name}</td>
+            <td>{item.address ? item.address : ''}</td>
+            <td>{item.email ? item.email : ''}</td>
+            <td>{item.mobile ? item.mobile : ''}</td>
+            <td>
+              <div class="flex items-center">
+                <a 
+                  href={`/app/supplier/${item.id}/edit`}
+                  class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-blue-500">
+                    <FaPencilAlt />
+                  </div>
+                </a>
+                <button 
+                  on:click={() => {
+                    on_delete(item.id)
+                  }}
+                  class="appearance-none rounded-full p-1 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-red-500">
+                    <FaTrash />
+                  </div>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="pagination">
     {#each Array(total_page) as _, i}
       <button
         on:click={() => {
@@ -149,5 +151,6 @@
         { i + 1 }
       </button>
     {/each}
-  </div>
+  </section>
+
 </div>

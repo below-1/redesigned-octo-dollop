@@ -36,33 +36,32 @@
 </script>
 
 <div class="cont">
-  <section class="bg-white p-4">
-    <div class="flex my-4 text-sm">
-      <div class="flex mr-4">
-        <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">total data</div>
-        <div class="bg-blue-600 text-white font-bold flex items-center px-2">{items.length}</div>
-      </div>
-      <div class="border border-gray-300 flex items-stretch">
-        <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500">per halaman</div>
-        <input
-          class="font-thin px-2"
-          value={per_page}
-          type="number"
-          min="10"
-          on:change={(event) => {
-            page = 0
-            per_page = parseInt(event.target.value)
-          }}
-        />
-      </div>
-      <div class="flex-grow"></div>
-      <button class="appearance-none border border-green-500 px-4 flex items-center font-bold mr-4">
-        print
-      </button>
-      <a href="/app/purchase/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold">
-        pembelian baru
-      </a>
+
+  <section class="header flex my-4 text-sm">
+    <div class="title-count">
+      <div>total data</div>
+      <div>{items.length}</div>
     </div>
+    <div class="group-input">
+      <label>per halaman</label>
+      <input
+        value={per_page}
+        type="number"
+        min="10"
+        on:change={(event) => {
+          page = 0
+          per_page = parseInt(event.target.value)
+        }}
+      />
+    </div>
+
+    <div class="flex-grow"></div>
+    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold mr-4">
+      print
+    </button>
+    <a href="/app/purchase/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold">
+      pembelian baru
+    </a>
   </section>
 
   <section>
@@ -121,7 +120,7 @@
     </table>
   </section>
 
-  <section>
+  <section class="pagination">
     {#each Array(total_page) as _, i}
       <button
         on:click={() => {

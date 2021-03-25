@@ -37,16 +37,16 @@
   $: load_sales({ per_page, page })
 </script>
 
-<div class="bg-white p-4">
-  <div class="flex my-4 text-sm">
-    <div class="flex mr-4">
-      <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">data penjualan</div>
-      <div class="bg-blue-600 text-white font-bold flex items-center px-2">{total_data}</div>
+<div class="cont">
+
+  <section class="header flex my-4 text-sm">
+    <div class="title-count">
+      <div>data penjualan</div>
+      <div>{total_data}</div>
     </div>
-    <div class="border border-gray-400 flex items-stretch rounded">
-      <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500 rounded-l">per halaman</div>
+    <div class="group-input">
+      <label>per halaman</label>
       <input
-        class="font-thin rounded px-2"
         value={per_page}
         type="number"
         min="10"
@@ -63,35 +63,37 @@
     <a href="/app/sale/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
       pembelian baru
     </a>
-  </div>
+  </section>
 
-  <table class="jo-table">
-    <thead>
-      <tr>
-        <th>pelanggan</th>
-        <th>waktu</th>
-        <th>total</th>
-        <th>keterangan</th>
-        <th>status pembayaran</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each items as item}
+  <section>
+    <table class="jo-table">
+      <thead>
         <tr>
-          <td>{item.user.first_name}</td>
-          <td>{fdate(new Date(item.created_at))}</td>
-          <td>{rupiah(item.grand_total)}</td>
-          <td>{item.content ? item.content : ''}</td>
-          <td>{item.transaction.status}</td>
-          <td>
-          </td>
+          <th>pelanggan</th>
+          <th>waktu</th>
+          <th>total</th>
+          <th>keterangan</th>
+          <th>status pembayaran</th>
+          <th></th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each items as item}
+          <tr>
+            <td>{item.user.first_name}</td>
+            <td>{fdate(new Date(item.created_at))}</td>
+            <td>{rupiah(item.grand_total)}</td>
+            <td>{item.content ? item.content : ''}</td>
+            <td>{item.transaction.status}</td>
+            <td>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </section>
 
-  <div class="my-4">
+  <section class="pagination">
     {#each Array(total_page) as _, i}
       <button
         on:click={() => {
@@ -102,5 +104,6 @@
         { i + 1 }
       </button>
     {/each}
-  </div>
+  </section>
+
 </div>
