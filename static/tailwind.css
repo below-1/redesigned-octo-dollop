@@ -16,7 +16,7 @@
     @apply mb-4;
   }
 
-  .cont > section.header {
+  .cont > section.header, .cont > section.pagination {
     @apply px-4 py-2 bg-white;
   }
 }
