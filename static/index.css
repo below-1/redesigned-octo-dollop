@@ -29247,7 +29247,7 @@ button.primary {
   margin-bottom: 1rem;
 }
 
-.cont > section.header {
+.cont > section.header, .cont > section.pagination {
   --tw-bg-opacity: 1;
   background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
   padding-top: 0.5rem;
