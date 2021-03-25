@@ -86,9 +86,10 @@
         url,
         payload
       })
-      console.log()
+      alert('sukses mengubah data pembelian')
     } catch (err) {
       console.log(err)
+      alert('gagal mengubah data pembelian')
     }
   }
 
