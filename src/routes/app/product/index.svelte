@@ -55,16 +55,17 @@
   $: load_product({ keyword, per_page, page })
 </script>
 
-<div class="bg-white p-4">
-  <div class="flex my-4 text-sm">
-    <div class="flex mr-4">
-      <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">total data</div>
-      <div class="bg-blue-600 text-white font-bold flex items-center px-2">{items.length}</div>
+<div class="cont">
+
+  <section class="header flex my-4 text-sm">
+    <div class="title-count">
+      <div>total data</div>
+      <div>{items.length}</div>
     </div>
-    <div class="border border-gray-400 flex items-stretch rounded mr-4">
-      <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500 rounded-l">pencarian</div>
+
+    <div class="group-input">
+      <label>pencarian</label>
       <input
-        class="font-thin rounded px-2 py-1"
         value={keyword}
         on:change={(event) => {
           page = 0
@@ -72,10 +73,9 @@
         }}
       />
     </div>
-    <div class="border border-gray-400 flex items-stretch rounded">
-      <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500 rounded-l">per halaman</div>
+    <div class="group-input">
+      <label>per halaman</label>
       <input
-        class="font-thin rounded px-2"
         value={per_page}
         type="number"
         min="10"
@@ -86,87 +86,90 @@
       />
     </div>
     <div class="flex-grow"></div>
-    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold rounded mr-4">
+    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold mr-4">
       print
     </button>
-    <a href="/app/product/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
+    <a href="/app/product/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold">
       tambah produk
     </a>
-  </div>
+  </section>
 
-  <table class="jo-table">
-    <thead>
-      <tr>
-        <th rowspan="2">no.</th>
-        <th rowspan="2">nama</th>
-        <th rowspan="2">kategori</th>
-        <th rowspan="2">keterangan</th>
-        <th colspan="3">stok</th>
-        <th rowspan="2"></th>
-      </tr>
-      <tr>
-        <th>tersedia</th>
-        <th>terjual</th>
-        <th>rusak</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each items as item, i}
+  <section>
+    <table class="jo-table">
+      <thead>
         <tr>
-          <td>{(i + 1) + (page * per_page)}</td>
-          <td>{item.title}</td>
-          <td>
-            <div class="flex items-center">
-              {#each item.categories as cat}
-                <div class="bg-gray-100 border border-gray-300 px-1 rounded mr-1 text-xs">
-                  {cat.title}
-                </div>
-              {/each}
-            </div>
-          </td>
-          <td>{item.content ? item.content : '-'}</td>
-          <td>{item.available ? item.available : '-'}</td>
-          <td>{item.sold ? item.sold : '-'}</td>
-          <td>{item.defective ? item.defective : '-'}</td>
-          <td>
-            <div class="flex items-center justify-end">
-              <a href={`/app/product/${item.id}/edit`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
-                <div class="w-3 h-3 text-blue-500">
-                  <FaPencilAlt />
-                </div>
-              </a>
-              <button 
-                on:click={() => {
-                  on_delete(item.id)
-                }}
-                class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
-                <div class="w-3 h-3 text-red-500">
-                  <FaTrash />
-                </div>
-              </button>
-              <ButtonMenu
-                btn_class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300"
-                menu_class="bg-white shadow"
-                menus={[
-                  {
-                    label: 'tambah stok',
-                    action: () => {}
-                  },
-                  {
-                    label: 'jual',
-                    action: () => {}
-                  }
-                ]}
-              >
-                <div slot="btn_content" class="w-3 h-3 text-gray-600"><FaCogs /></div>
-              </ButtonMenu>
-            </div>
-          </td>
+          <th rowspan="2">no.</th>
+          <th rowspan="2">nama</th>
+          <th rowspan="2">kategori</th>
+          <th rowspan="2">keterangan</th>
+          <th colspan="3">stok</th>
+          <th rowspan="2"></th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
-  <div class="my-4">
+        <tr>
+          <th>tersedia</th>
+          <th>terjual</th>
+          <th>rusak</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each items as item, i}
+          <tr>
+            <td>{(i + 1) + (page * per_page)}</td>
+            <td>{item.title}</td>
+            <td>
+              <div class="flex items-center">
+                {#each item.categories as cat}
+                  <div class="bg-gray-100 border border-gray-300 px-1 rounded mr-1 text-xs">
+                    {cat.title}
+                  </div>
+                {/each}
+              </div>
+            </td>
+            <td>{item.content ? item.content : '-'}</td>
+            <td>{item.available ? item.available : '-'}</td>
+            <td>{item.sold ? item.sold : '-'}</td>
+            <td>{item.defective ? item.defective : '-'}</td>
+            <td>
+              <div class="flex items-center justify-end">
+                <a href={`/app/product/${item.id}/edit`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-blue-500">
+                    <FaPencilAlt />
+                  </div>
+                </a>
+                <button 
+                  on:click={() => {
+                    on_delete(item.id)
+                  }}
+                  class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
+                  <div class="w-3 h-3 text-red-500">
+                    <FaTrash />
+                  </div>
+                </button>
+                <ButtonMenu
+                  btn_class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300"
+                  menu_class="bg-white shadow"
+                  menus={[
+                    {
+                      label: 'tambah stok',
+                      action: () => {}
+                    },
+                    {
+                      label: 'jual',
+                      action: () => {}
+                    }
+                  ]}
+                >
+                  <div slot="btn_content" class="w-3 h-3 text-gray-600"><FaCogs /></div>
+                </ButtonMenu>
+              </div>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="pagination">
     {#each Array(total_page) as _, i}
       <button
         on:click={() => {
@@ -177,5 +180,6 @@
         { i + 1 }
       </button>
     {/each}
-  </div>
+  </section>
+
 </div>
