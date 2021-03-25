@@ -69,10 +69,9 @@
         }}
       />
     </div>
-    <div class="border border-gray-400 flex items-stretch rounded">
-      <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500 rounded-l">per halaman</div>
+    <div class="group-input">
+      <label>per halaman</label>
       <input
-        class="font-thin rounded px-2"
         value={per_page}
         type="number"
         min="10"
