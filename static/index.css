@@ -580,6 +580,18 @@ video {
   text-decoration: underline;
 }
 
+button.primary {
+  --tw-bg-opacity: 1;
+  background-color: rgba(5, 150, 105, var(--tw-bg-opacity));
+  font-weight: 700;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
 .space-y-0 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
@@ -29229,6 +29241,10 @@ video {
 
 .animate-bounce {
   animation: bounce 1s infinite;
+}
+
+.cont > section {
+  margin-bottom: 1rem;
 }
 
 @media (min-width: 640px) {

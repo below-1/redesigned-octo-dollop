@@ -47,6 +47,9 @@
       transaction = order.transaction
       delay = order.delay
       items = result.items
+
+      order_status = order.status
+      transaction_status = transaction.status
     } catch (err) {
       console.log(err)
       alert('gagal mengambil data penjualan')
@@ -102,13 +105,9 @@
   .order-detail li:last-child {
     border-bottom: none;
   }
-
-  .container > section {
-    margin-bottom: 12px;
-  }
 </style>
 
-<div class="container">
+<div class="cont">
 
   <section class="bg-white flex items-center px-4 py-2">
     <div class="font-bold text-lg">pembelian / detail pembelian #{id}</div>

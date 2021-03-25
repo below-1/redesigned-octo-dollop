@@ -16,7 +16,6 @@
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
   import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
 
-  let form_valid = false
   let order = {
     user_id: null,
     status: null,
@@ -141,6 +140,8 @@
     }
   }))
 
+  $: form_valid = $main_form.valid && items.length > 0
+
   function edit_item (product_id) {
     let item = items.find(it => it.product_id == product_id)
     edit_item_data = { ...item }
@@ -163,17 +164,17 @@
 
   async function save () {
     let payload = {
-      supplier_id,
-      tax: `${tax}`,
-      created_at: (new Date(created_at)),
-      content,
-      status,
-      shipping: `${shipping}`,
-      discount: `${discount}`,
-      trans_status,
-      trans_mode,
-      trans_nominal,
-      delay_due_date,
+      supplier_id: order.user_id,
+      tax: `${order.tax}`,
+      created_at: (new Date(order.created_at)),
+      content: order.created_at,
+      status: order.status,
+      shipping: `${order.shipping}`,
+      discount: `${order.discount}`,
+      trans_status: transaction.status,
+      trans_mode: transaction.mode,
+      trans_nominal: transaction.nominal,
+      delay_due_date: transaction.delay_due_date,
       items: items.map(it => ({
         ...it,
         price: `${it.price}`,

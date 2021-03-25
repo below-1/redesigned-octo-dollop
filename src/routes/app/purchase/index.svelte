@@ -35,68 +35,93 @@
   $: load_purchase({ per_page, page })
 </script>
 
-<div class="bg-white p-4">
-  <div class="flex my-4 text-sm">
-    <div class="flex mr-4">
-      <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">total data</div>
-      <div class="bg-blue-600 text-white font-bold flex items-center px-2">{items.length}</div>
+<div class="cont">
+  <section class="bg-white p-4">
+    <div class="flex my-4 text-sm">
+      <div class="flex mr-4">
+        <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">total data</div>
+        <div class="bg-blue-600 text-white font-bold flex items-center px-2">{items.length}</div>
+      </div>
+      <div class="border border-gray-300 flex items-stretch">
+        <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500">per halaman</div>
+        <input
+          class="font-thin px-2"
+          value={per_page}
+          type="number"
+          min="10"
+          on:change={(event) => {
+            page = 0
+            per_page = parseInt(event.target.value)
+          }}
+        />
+      </div>
+      <div class="flex-grow"></div>
+      <button class="appearance-none border border-green-500 px-4 flex items-center font-bold mr-4">
+        print
+      </button>
+      <a href="/app/purchase/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold">
+        pembelian baru
+      </a>
     </div>
-    <div class="border border-gray-400 flex items-stretch rounded">
-      <div class="bg-gray-200 inline-block flex items-center px-3 text-gray-500 rounded-l">per halaman</div>
-      <input
-        class="font-thin rounded px-2"
-        value={per_page}
-        type="number"
-        min="10"
-        on:change={(event) => {
-          page = 0
-          per_page = parseInt(event.target.value)
-        }}
-      />
-    </div>
-    <div class="flex-grow"></div>
-    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold rounded mr-4">
-      print
-    </button>
-    <a href="/app/purchase/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
-      pembelian baru
-    </a>
-  </div>
-  <table class="jo-table">
-    <thead>
-      <tr>
-        <th>supplier</th>
-        <th>sub total</th>
-        <th>total</th>
-        <th>waktu</th>
-        <th>keterangan</th>
-        <th>status pembayaran</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each items as item}
-        <tr>
-          <td>{item.user.first_name}</td>
-          <td>{rupiah(item.sub_total)}</td>
-          <td>{rupiah(item.grand_total)}</td>
-          <td>{fdate(new Date(item.created_at))}</td>
-          <td>{item.content ? item.content : ''}</td>
-          <td>
-            {#if item.delay}
-              <div class="text-yellow-700 font-bold">utang</div>
-            {:else}
-              <div class="text-gren-700 font-bold">lunas</div>
-            {/if}
-          </td>
-          <td>
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+  </section>
 
-  <div class="my-4">
+  <section>
+    <table class="jo-table">
+      <thead>
+        <tr>
+          <th>supplier</th>
+          <th>total</th>
+          <th>waktu</th>
+          <th>status pembayaran</th>
+          <th>status orderan</th>
+          <th>metode pembayaran</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each items as item}
+          <tr>
+            <td>
+              <a class="just-link" href={`/app/supplier/${item.user.id}/detail`}>
+                {item.user.first_name}
+              </a>
+            </td>
+            <td>{rupiah(parseInt(item.grand_total))}</td>
+            <td>{fdate(new Date(item.created_at))}</td>
+            <td>
+              {#if item.delay}
+                <div class="text-yellow-700 font-bold">utang</div>
+              {:else}
+                <div class="text-gren-700 font-bold">lunas</div>
+              {/if}
+            </td>
+            <td class="lowercase">{item.status}</td>
+            <td class="lowercase">{item.transaction.mode}</td>
+            <td>
+              <div class="flex items-center justify-end">
+                <a href={`/app/purchase/${item.id}/detail`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-blue-500">
+                    <FaPencilAlt />
+                  </div>
+                </a>
+                <button 
+                  on:click={() => {
+                    
+                  }}
+                  class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
+                  <div class="w-3 h-3 text-red-500">
+                    <FaTrash />
+                  </div>
+                </button>
+              </div>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
     {#each Array(total_page) as _, i}
       <button
         on:click={() => {
@@ -107,5 +132,5 @@
         { i + 1 }
       </button>
     {/each}
-  </div>
+  </section>
 </div>
