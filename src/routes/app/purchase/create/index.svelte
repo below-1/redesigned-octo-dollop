@@ -40,7 +40,7 @@
   function calculate_grand_total ({ items, order }) {
     const { discount, tax, shipping } = order
     const items_total = items
-      .map(it => (it.sale_price - (it.sale_price * it.discount)) * it.quantity )
+      .map(it => (it.price - (it.price * it.discount)) * it.quantity )
       .reduce((a, b) => a + b, 0)
     const discounted = items_total - (items_total * discount)
     const taxed = discounted + (discounted * tax)

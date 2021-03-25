@@ -8,6 +8,7 @@
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
   import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
   import FaCogs from 'svelte-icons/fa/FaCogs.svelte'
+  import { del_confirm } from '../store'
 
   let per_page = 10
   let page = 0
@@ -30,6 +31,23 @@
       console.log(err)
       alert('gagal mengambil data pembelian')
     }
+  }
+
+  function on_delete (id) {
+    const url = `/api/v1/purchase/${id}`
+    del_confirm.show({
+      entity: 'pembelian',
+      id,
+      on_yes: async () => {
+        try {
+          await del({ url })
+          await load_purchase()
+        } catch (err) {
+          console.log(err)
+          alert('gagal menghapus data pembelian')
+        }
+      }
+    })
   }
 
   $: load_purchase({ per_page, page })
@@ -105,7 +123,7 @@
                 </a>
                 <button 
                   on:click={() => {
-                    
+                    on_delete(item.id)
                   }}
                   class="rd-action">
                   <div class="w-3 h-3 text-red-500">
