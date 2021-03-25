@@ -29314,6 +29314,45 @@ button.primary {
   padding-right: 0.5rem;
 }
 
+button.primary, a.primary {
+  appearance: none;
+  --tw-bg-opacity: 1;
+  background-color: rgba(16, 185, 129, var(--tw-bg-opacity));
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
+}
+
+button.outline-primary {
+  appearance: none;
+  --tw-border-opacity: 1;
+  border-color: rgba(16, 185, 129, var(--tw-border-opacity));
+  border-width: 1px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.rd-action {
+  appearance: none;
+}
+
+.rd-action:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(209, 213, 219, var(--tw-bg-opacity));
+}
+
+.rd-action {
+  border-radius: 9999px;
+  padding: 0.25rem;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

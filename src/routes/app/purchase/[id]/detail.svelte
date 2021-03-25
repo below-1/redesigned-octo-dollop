@@ -211,7 +211,7 @@
         </li>
         <li>
           <div>Diskon</div>
-          <div>{order.discount}</div>
+          <div>{(order.discount * 100).toFixed()} %</div>
         </li>
         <li>
           <div>Pajak</div>
@@ -267,7 +267,7 @@
             <td>{item.quantity}</td>
             <td>{rupiah(parseInt(item.price))}</td>
             <td>{rupiah(parseInt(item.sale_price))}</td>
-            <td>{item.discount}</td>
+            <td>{(item.discount * 100).toFixed()} %</td>
           </tr>
         {/each}
       </tbody>

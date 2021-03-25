@@ -39,7 +39,7 @@
 
 <div class="cont">
 
-  <section class="header flex my-4 text-sm">
+  <section class="header flex text-sm">
     <div class="title-count">
       <div>data penjualan</div>
       <div>{total_data}</div>
@@ -57,10 +57,10 @@
       />
     </div>
     <div class="flex-grow"></div>
-    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold rounded mr-4">
+    <button class="primary-outline mr-2">
       print
     </button>
-    <a href="/app/sale/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
+    <a href="/app/sale/create" class="primary">
       pembelian baru
     </a>
   </section>

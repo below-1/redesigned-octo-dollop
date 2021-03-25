@@ -43,4 +43,16 @@
   .cont > section.header > .group-input > input, .cont > section.header > .group-input > select {
     @apply font-thin px-2 py-1;
   }
+
+  button.primary, a.primary {
+    @apply appearance-none bg-green-500 text-white px-4 flex items-center font-bold;
+  }
+
+  button.outline-primary {
+    @apply appearance-none border border-green-500 px-4 flex items-center font-bold;
+  }
+
+  .rd-action {
+    @apply appearance-none rounded-full p-1 hover:bg-gray-300;
+  }
 }

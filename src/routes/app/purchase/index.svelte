@@ -37,7 +37,7 @@
 
 <div class="cont">
 
-  <section class="header flex my-4 text-sm">
+  <section class="header flex text-sm">
     <div class="title-count">
       <div>total data</div>
       <div>{items.length}</div>
@@ -56,10 +56,10 @@
     </div>
 
     <div class="flex-grow"></div>
-    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold mr-4">
+    <button class="outline-primary mr-4">
       print
     </button>
-    <a href="/app/purchase/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold">
+    <a href="/app/purchase/create" class="primary" role="button">
       pembelian baru
     </a>
   </section>
@@ -98,7 +98,7 @@
             <td class="lowercase">{item.transaction.mode}</td>
             <td>
               <div class="flex items-center justify-end">
-                <a href={`/app/purchase/${item.id}/detail`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                <a href={`/app/purchase/${item.id}/detail`} class="rd-action mr-2">
                   <div class="w-3 h-3 text-blue-500">
                     <FaPencilAlt />
                   </div>
@@ -107,7 +107,7 @@
                   on:click={() => {
                     
                   }}
-                  class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
+                  class="rd-action">
                   <div class="w-3 h-3 text-red-500">
                     <FaTrash />
                   </div>

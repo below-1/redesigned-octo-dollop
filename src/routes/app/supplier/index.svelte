@@ -58,7 +58,7 @@
 
 <div class="cont">
 
-  <section class="header flex my-4 text-sm">
+  <section class="header flex text-sm">
     <div class="title-count">
       <div>total supplier</div>
       <div>{items.length}</div>
