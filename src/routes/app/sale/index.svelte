@@ -80,7 +80,11 @@
       <tbody>
         {#each items as item}
           <tr>
-            <td>{item.user.first_name}</td>
+            <td>
+              <a class="just-link" href={`/app/customer/${item.user.id}/detail`}>
+                {item.user.first_name}
+              </a>
+            </td>
             <td>{fdate(new Date(item.created_at))}</td>
             <td>{rupiah(item.grand_total)}</td>
             <td>{item.content ? item.content : ''}</td>

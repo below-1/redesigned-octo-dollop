@@ -11,26 +11,16 @@
   export let edit = false
 
   let product_id = null
-  let item_id = null
   let quantity = 0
   
   let products = []
-  let items = []
 
   $: product_ids = order_items.map(item => item.product_id)
   $: free_products = products.filter(product => {
     return !product_ids.includes(product.id)
   })
   $: selected_product = products.find(product => product.id == product_id)
-  $: {
-    // WE SHOULD SET item_id TO NULL WHEN PRODUCT CHANGE ON EDIT MODE
-    if (!edit) {
-      item_id = null
-    }
-    load_items({ product_id })
-  }
-  $: selected_item = items.find(item => item.id == item_id)
-  $: max_pcs = selected_item ? selected_item.available : 0
+  $: max_pcs = selected_product ? selected_product.available : 0
 
   async function load_items ({ product_id }) {
     if (!process.browser) return;
@@ -45,7 +35,7 @@
   }
 
   async function load_products () {
-    const result = await get({ url: '/api/v1/product' })
+    const result = await get({ url: '/api/v1/product', params: { only_available: true } })
     products = result.items
   }
 
@@ -54,10 +44,10 @@
       product_id,
       product_title: selected_product.title,
       quantity,
-      item_id,
-      discount: selected_item.discount,
-      sale_price: selected_item.sale_price,
-      price: selected_item.price
+      item_id: selected_product.item_id,
+      discount: selected_product.discount,
+      sale_price: selected_product.sale_price,
+      price: selected_product.price
     }
     dispatch('done', payload)
   }
@@ -119,24 +109,10 @@
               <option disabled value={null}>-- pilih produk --</option>
 
               {#each free_products as product}
-                <option value={product.id}>{product.title}</option>
+                <option value={product.id}>{product.title} - ({product.available} pcs)</option>
               {/each}
             </select>
           {/if}
-        </div>
-      </div>
-
-      <div class="flex items-center mb-4">
-        <label class="w-1/3">Nota Pembelian</label>
-        <div class="w-2/3">
-          <select 
-            bind:value={item_id} 
-            class="w-full border border-gray-300 rounded px-2 py-1">
-            <option disabled value={null}>-- pilih item --</option>
-            {#each items as item}
-             <option value={item.id}>{item.available} pcs - {fdate(new Date(item.created_at))}</option>
-            {/each}
-          </select>
         </div>
       </div>
 
