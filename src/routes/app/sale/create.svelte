@@ -163,6 +163,10 @@
       alert('gagal menambah data penjualan')
     }
   }
+
+  function remove_item (pid) {
+    items = items.filter(it => it.product_id != pid)
+  }
 </script>
 
 <div>
@@ -223,8 +227,8 @@
             <td>{i + 1}</td>
             <td>{item.product_title}</td>
             <td>{item.quantity}</td>
-            <td>{rupiah(item.price)}</td>
-            <td>{rupiah(item.sale_price)}</td>
+            <td>{rupiah(parseInt(item.price))}</td>
+            <td>{rupiah(parseInt(item.sale_price))}</td>
             <td>{(item.discount * 100)} %</td>
             <td>
               <div class="flex items-center justify-end">
@@ -242,7 +246,7 @@
                 </button>
                 <button 
                   on:click={() => {
-                    // remove_item(item.product_id)
+                    remove_item(item.product_id)
                   }}
                   class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
                   <div class="w-3 h-3 text-red-500">

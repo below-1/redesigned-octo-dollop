@@ -3,6 +3,7 @@
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import '../../../styles/jo-table.css'
   import { get, del } from '../../../commons/api'
+  import rupiah from '../../../commons/rupiah'
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
   import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
   import FaCogs from 'svelte-icons/fa/FaCogs.svelte'
@@ -100,8 +101,8 @@
         <tr>
           <th rowspan="2">no.</th>
           <th rowspan="2">nama</th>
-          <th rowspan="2">kategori</th>
-          <th rowspan="2">keterangan</th>
+          <th rowspan="2">harga jual</th>
+          <th rowspan="2">diskon</th>
           <th colspan="3">stok</th>
           <th rowspan="2"></th>
         </tr>
@@ -116,16 +117,8 @@
           <tr>
             <td>{(i + 1) + (page * per_page)}</td>
             <td>{item.title}</td>
-            <td>
-              <div class="flex items-center">
-                {#each item.categories as cat}
-                  <div class="bg-gray-100 border border-gray-300 px-1 rounded mr-1 text-xs">
-                    {cat.title}
-                  </div>
-                {/each}
-              </div>
-            </td>
-            <td>{item.content ? item.content : '-'}</td>
+            <td>{item.sale_price ? rupiah(parseInt(item.sale_price)) : '-'}</td>
+            <td>{(item.discount * 100).toFixed(2)} %</td>
             <td>{item.available ? item.available : '-'}</td>
             <td>{item.sold ? item.sold : '-'}</td>
             <td>{item.defective ? item.defective : '-'}</td>
