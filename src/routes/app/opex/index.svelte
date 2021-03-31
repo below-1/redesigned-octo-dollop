@@ -8,6 +8,7 @@
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
   import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
   import FaCogs from 'svelte-icons/fa/FaCogs.svelte'
+  import { del_confirm } from '../store'
 
   let per_page = 10
   let page = 0
@@ -46,6 +47,23 @@
       console.log(err)
       alert('gagal mengambil data beban usaha')
     }
+  }
+
+  function on_delete (id) {
+    const url = `/api/v1/opex/${id}`
+    del_confirm.show({
+      entity: 'beban usaha',
+      id,
+      on_yes: async () => {
+        try {
+          await del({ url })
+          await load_op_instances({ per_page, page })
+        } catch (err) {
+          console.log(err)
+          alert('gagal menghapus data beban usaha')
+        }
+      }
+    })
   }
 
   $: load_op_instances({ per_page, page })
@@ -106,7 +124,7 @@
               <div class="flex items-center">
                 <button 
                   on:click={() => {
-                    remove_op_instance(item.id)
+                    on_delete(item.id)
                   }}
                   class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
                   <div class="w-3 h-3 text-red-500">
