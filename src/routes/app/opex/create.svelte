@@ -28,6 +28,7 @@
         payload
       })
       console.log(result)
+      window.history.back()
     } catch (err) {
       console.log(err)
     }
