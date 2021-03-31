@@ -28,8 +28,6 @@
   }
 
   $: load_optypes({ per_page, page, keyword })
-
-  onMount(load_optypes)
 </script>
 
 <div class="cont">
