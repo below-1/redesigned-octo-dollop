@@ -70,5 +70,5 @@
     <button 
       disabled={!$customer_form.valid}
       on:click={save} class="px-6 py-1 bg-blue-600 text-white font-bold rounded shadow disabled:opacity-50">simpan</button>
-  </div>
+  </div>  
 </div>

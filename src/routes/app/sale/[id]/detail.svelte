@@ -18,7 +18,7 @@
   let delay = {}
   let user = {}
   let items = []
-$: total_pcs = items.map(it => it.quantity).reduce((a, b) => a + b, 0)
+  $: total_pcs = items.map(it => it.quantity).reduce((a, b) => a + b, 0)
 
   let order_status = null
   let transaction_status = null
