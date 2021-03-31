@@ -28,7 +28,8 @@
 	const menus = [
 		{ path: '/app', label: 'dashboard', icon: FaTachometerAlt },
 		{ group: true, label: 'master' },
-		{ path: '/app/category', label: 'kategori', desc: 'pengolahan data kategori barang', icon: FaListOl },
+		{ path: '/app/category', label: 'kategori barang', desc: 'pengolahan data kategori barang', icon: FaListOl },
+		{ path: '/app/optype', label: 'kategori BU', desc: 'pengolahan data kategori beban usaha', icon: FaListOl },
 		{ path: '/app/customer', label: 'pelanggan', desc: 'pengolahan data pelanggan', icon: FaUsers },
 		{ path: '/app/supplier', label: 'supplier', desc: 'pengolahan data supplier', icon: FaTruckMoving },
 		{ path: '/app/product', label: 'gudang', desc: 'pengolahan data barang', icon: FaBoxes },

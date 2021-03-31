@@ -1,6 +1,7 @@
 <script>
   import parse from 'date-fns/parse'
   import format from 'date-fns/format'
+  import { setDate } from 'date-fns'
   import set from 'date-fns/set'
   import getDaysInMonth from 'date-fns/getDaysInMonth'
   import FaCalendarAlt from 'svelte-icons/fa/FaCalendarAlt.svelte'
@@ -8,7 +9,7 @@
 
   export let date = new Date()
   $: year = date.getFullYear()
-  $: month = date.getMonth() + 1
+  $: month = date.getMonth()
   $: day = date.getDate()
   $: hours = date.getHours()
   $: minutes = date.getMinutes()
@@ -80,7 +81,7 @@
       <select
         value={month}
         on:change={(event) => {
-          const month = parseInt(event.target.value) - 1
+          const month = parseInt(event.target.value)
           date = set(date, {
             month
           })

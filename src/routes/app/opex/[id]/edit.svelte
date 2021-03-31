@@ -7,6 +7,7 @@
 <script>
   import { onMount } from 'svelte'
   import chrome_fdate from '../../../../commons/chrome_fdate'
+  import Currency from '../../../../components/Currency.svelte'
   import { form } from 'svelte-forms'
   import { get, put } from '../../../../commons/api'
 
@@ -22,6 +23,18 @@
 
   $: load_opex_instance({ id })
 
+  async function load_optype () {
+    try {
+      const result = await get({
+        url: '/api/v1/optype'
+      })
+      opexes = result.items
+    } catch (err) {
+      console.log(err)
+      alert('gagal mengambil data beban usaha')
+    }
+  }
+
   async function load_opex_instance ({ id }) {
     if (!process.browser) return;
     if (!id) {
@@ -32,7 +45,7 @@
     console.log(id)
     try {
       const item = await get({
-        url: `/api/v1/opex/op_instances/${id}`
+        url: `/api/v1/opex/${id}`
       })
 
       id_opex = item.opex.id
@@ -58,24 +71,13 @@
     }
     try {
       const result = await put({
-        url: `/api/v1/opex/op_instances/${id}`,
+        url: `/api/v1/opex/${id}`,
         payload
       })
       console.log(result)
       window.history.back()
     } catch (err) {
       console.log(err)
-    }
-  }
-
-  async function load_opexes () {
-    try {
-      opexes = await get({
-        url: '/api/v1/opex'
-      })
-    } catch (err) {
-      console.log(err)
-      alert('gagal mengambil data beban usaha')
     }
   }
 
@@ -98,9 +100,7 @@
     }
   }))
 
-  onMount(async () => {
-    await load_opexes()
-  })
+  onMount(load_optype)
 </script>
 
 <div class="flex items-center justify-center flex-grow">
@@ -172,7 +172,7 @@
     <div class="flex flex-col mb-3">
       <label>Nominal</label>
       <div class="flex flex-col">
-        <input bind:value={nominal} class="border border-gray-300 rounded px-2 py-1" />
+        <Currency bind:value={nominal} />
         {#if $main_form.fields.nominal.errors.includes('required')}
           <small class="text-red-500 text-xs">nominal harus diisi</small>
         {/if}

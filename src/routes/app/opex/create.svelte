@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte'
   import chrome_fdate from '../../../commons/chrome_fdate'
+  import Currency from '../../../components/Currency.svelte'
   import { form } from 'svelte-forms'
   import { get, post } from '../../../commons/api'
 
@@ -23,7 +24,7 @@
     }
     try {
       const result = await post({
-        url: '/api/v1/opex/op_instances',
+        url: '/api/v1/opex',
         payload
       })
       console.log(result)
@@ -34,9 +35,10 @@
 
   async function load_opexes () {
     try {
-      opexes = await get({
-        url: '/api/v1/opex'
+      const result = await get({
+        url: '/api/v1/optype'
       })
+      opexes = result.items
     } catch (err) {
       console.log(err)
       alert('gagal mengambil data beban usaha')
@@ -136,7 +138,7 @@
     <div class="flex flex-col mb-3">
       <label>Nominal</label>
       <div class="flex flex-col">
-        <input bind:value={nominal} class="border border-gray-300 rounded px-2 py-1" />
+        <Currency bind:value={nominal} />
         {#if $main_form.fields.nominal.errors.includes('required')}
           <small class="text-red-500 text-xs">nominal harus diisi</small>
         {/if}

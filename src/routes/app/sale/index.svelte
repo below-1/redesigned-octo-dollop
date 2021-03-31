@@ -8,6 +8,7 @@
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
   import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
   import FaCogs from 'svelte-icons/fa/FaCogs.svelte'
+  import { del_confirm } from '../store'
 
   let per_page = 10
   let page = 0
@@ -34,6 +35,23 @@
     }
   }
 
+  function on_delete (id) {
+    const url = `/api/v1/sale/${id}`
+    del_confirm.show({
+      entity: 'penjualan',
+      id,
+      on_yes: async () => {
+        try {
+          await del({ url })
+          await load_sales({ per_page, page })
+        } catch (err) {
+          console.log(err)
+          alert('gagal menghapus data penjualan')
+        }
+      }
+    })
+  }
+
   $: load_sales({ per_page, page })
 </script>
 
@@ -57,7 +75,7 @@
       />
     </div>
     <div class="flex-grow"></div>
-    <button class="primary-outline mr-2">
+    <button class="outline-primary mr-2">
       print
     </button>
     <a href="/app/sale/create" class="primary">
@@ -71,7 +89,8 @@
         <tr>
           <th>pelanggan</th>
           <th>waktu</th>
-          <th>total</th>
+          <th>harga total</th>
+          <th>nominal bayar</th>
           <th>keterangan</th>
           <th>status pembayaran</th>
           <th></th>
@@ -86,10 +105,27 @@
               </a>
             </td>
             <td>{fdate(new Date(item.created_at))}</td>
-            <td>{rupiah(item.grand_total)}</td>
+            <td>{rupiah(parseInt(item.grand_total))}</td>
+            <td>{rupiah(parseInt(item.transaction.nominal))}</td>
             <td>{item.content ? item.content : ''}</td>
             <td>{item.transaction.status}</td>
             <td>
+              <div class="flex items-center justify-end">
+                <a href={`/app/sale/${item.id}/detail`} class="rd-action mr-2">
+                  <div class="w-3 h-3 text-blue-500">
+                    <FaPencilAlt />
+                  </div>
+                </a>
+                <button 
+                  on:click={() => {
+                    on_delete(item.id)
+                  }}
+                  class="rd-action">
+                  <div class="w-3 h-3 text-red-500">
+                    <FaTrash />
+                  </div>
+                </button>
+              </div>
             </td>
           </tr>
         {/each}

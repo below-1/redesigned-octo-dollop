@@ -18,7 +18,7 @@
   async function remove_op_instance (id) {
     try {
       const result = await del({
-        url: `/api/v1/opex/op_instances/${id}`
+        url: `/api/v1/opex/${id}`
       })
       console.log(result)
     } catch (err) {
@@ -33,7 +33,7 @@
     if (!process.browser) return;
     try {
       const result = await get({
-        url: '/api/v1/opex/op_instances',
+        url: '/api/v1/opex',
         params: {
           per_page,
           page
@@ -51,8 +51,9 @@
   $: load_op_instances({ per_page, page })
 </script>
 
-<div class="bg-white p-4">
-  <div class="flex my-4 text-sm">
+<div class="cont">
+
+  <section class="header flex text-sm">
     <div class="flex mr-4">
       <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">data beban usaha</div>
       <div class="bg-blue-600 text-white font-bold flex items-center px-2">{total_data}</div>
@@ -77,56 +78,58 @@
     <a href="/app/opex/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
       data baru
     </a>
-  </div>
+  </section>
 
+  <section>
     <table class="jo-table">
-    <thead>
-      <tr>
-        <th>jenis</th>
-        <th>waktu</th>
-        <th>metod pembayaran</th>
-        <th>status</th>
-        <th>nominal</th>
-        <th>content</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each items as item}
+      <thead>
         <tr>
-          <td>{item.opex.name}</td>
-          <td>{fdate(new Date(item.created_at))}</td>
-          <td>{item.mode}</td>
-          <td>{item.status}</td>
-          <td>{rupiah(parseInt(item.nominal))}</td>
-          <td>{item.content ? item.content : ''}</td>
-          <td>
-            <div class="flex items-center">
-              <button 
-                on:click={() => {
-                  remove_op_instance(item.id)
-                }}
-                class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
-                <div class="w-3 h-3 text-red-500">
-                  <FaTrash />
-                </div>
-              </button>
-              <a 
-                href={`/app/opex/${item.id}/edit`}
-                class="appearance-none rounded-full p-1 hover:bg-gray-300"
-              >
-                <div class="w-3 h-3 text-blue-500">
-                  <FaPencilAlt />
-                </div>
-              </a>
-            </div>
-          </td>
+          <th>jenis</th>
+          <th>waktu</th>
+          <th>metod pembayaran</th>
+          <th>status</th>
+          <th>nominal</th>
+          <th>content</th>
+          <th></th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each items as item}
+          <tr>
+            <td>{item.opex.name}</td>
+            <td>{fdate(new Date(item.created_at))}</td>
+            <td>{item.mode}</td>
+            <td>{item.status}</td>
+            <td>{rupiah(parseInt(item.nominal))}</td>
+            <td>{item.content ? item.content : ''}</td>
+            <td>
+              <div class="flex items-center">
+                <button 
+                  on:click={() => {
+                    remove_op_instance(item.id)
+                  }}
+                  class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
+                  <div class="w-3 h-3 text-red-500">
+                    <FaTrash />
+                  </div>
+                </button>
+                <a 
+                  href={`/app/opex/${item.id}/edit`}
+                  class="appearance-none rounded-full p-1 hover:bg-gray-300"
+                >
+                  <div class="w-3 h-3 text-blue-500">
+                    <FaPencilAlt />
+                  </div>
+                </a>
+              </div>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </section>
 
-  <div class="my-4">
+  <section class="pagination">
     {#each Array(total_page) as _, i}
       <button
         on:click={() => {
@@ -137,5 +140,5 @@
         { i + 1 }
       </button>
     {/each}
-  </div>
+  </section>
 </div>
