@@ -43,6 +43,8 @@
   let payments = []
   let transaction = {}
 
+  $: paid = rupiah(payments.map(p => parseInt(p.nominal)).reduce((a, b) => a + b, 0))
+
   function just_date (s) {
     if (!s) return ''
     return format(new Date(s), "dd MMMM',' yyyy")
@@ -120,7 +122,7 @@
       </li>
       <li>
         <div>Sudah Dibayar</div>
-        <div></div>
+        <div>{paid}</div>
       </li>
     </ul>
   </section>
@@ -133,11 +135,27 @@
       <thead>
         <tr>
           <th>no.</th>
+          <th>admin</th>
           <th>tanggal</th>
           <th>nominal</th>
+          <th>metode pembayaran</th>
           <th></th>
         </tr>
       </thead>
+      <tbody>
+        {#each payments as pay, i}
+          <tr>
+            <td>{i + 1}</td>
+            <td>
+              <a href={`/app/employee/${pay.user.id}/edit`} class="just-link">{pay.user.first_name}</a>
+            </td>
+            <td>{just_date(pay.created_at)}</td>
+            <td>{rupiah(parseInt(pay.nominal))}</td>
+            <td class="lowercase">{pay.mode}</td>
+            <td></td>
+          </tr>
+        {/each}
+      </tbody>
     </table>
   </section>
 </div>

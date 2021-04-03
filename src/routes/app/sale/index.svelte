@@ -87,6 +87,7 @@
     <table class="jo-table">
       <thead>
         <tr>
+          <th></th>
           <th>pelanggan</th>
           <th>waktu</th>
           <th>harga total</th>
@@ -99,6 +100,7 @@
       <tbody>
         {#each items as item}
           <tr>
+            <td>{item.id}</td>
             <td>
               <a class="just-link" href={`/app/customer/${item.user.id}/detail`}>
                 {item.user.first_name}
