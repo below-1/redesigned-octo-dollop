@@ -94,15 +94,15 @@
             <td>{rupiah(item.paid)}</td>
             <td></td>
             <td>
-              <td>
-                <div class="flex items-center">
-                  <a href={`/app/ar/${item.id}/detail`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
-                    <div class="w-3 h-3 text-blue-500">
-                      <FaPencilAlt />
-                    </div>
-                  </a>
-                </div>
-              </td>
+            <td>
+              <div class="flex items-center">
+                <a href={`/app/ar/${item.id}/detail`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-blue-500">
+                    <FaPencilAlt />
+                  </div>
+                </a>
+              </div>
+            </td>
           </tr>
         {/each}
       </tbody>

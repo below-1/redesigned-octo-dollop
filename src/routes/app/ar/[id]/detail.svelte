@@ -10,14 +10,14 @@
     border-collapse: collapse;
   }
   .card-detail h1 {
-    font-size: 1rem;
+    font-size: 0.94rem;
     font-weight: 600;
-    padding: 4px 20px;
+    padding: 8px 20px;
   }
   .card-detail li {
     border-bottom: 2px dashed rgb(210, 210, 210);
     padding: 6px 20px;
-    font-size: 1rem;
+    font-size: 0.86rem;
     font-weight: bold;
     font-family: monospace;
     display: flex;
@@ -35,6 +35,8 @@
   import rupiah from '../../../../commons/rupiah'
   import { put, get } from '../../../../commons/api'
   import '../../../../styles/jo-table.css'
+  import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
+  import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
 
   export let id
   let delay = {}
@@ -80,6 +82,10 @@
       console.log(err)
       alert('gagal mengambil data piutang')
     }
+  }
+
+  function on_delete_payment(id) {
+    console.log('deleting payment')
   }
 
   $: load_ar(id)
@@ -152,7 +158,24 @@
             <td>{just_date(pay.created_at)}</td>
             <td>{rupiah(parseInt(pay.nominal))}</td>
             <td class="lowercase">{pay.mode}</td>
-            <td></td>
+            <td>
+              <div class="flex items-center justify-end">
+                <a href={`/app/ar/payment/${pay.id}/edit`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-blue-500">
+                    <FaPencilAlt />
+                  </div>
+                </a>
+                <button 
+                  on:click={() => {
+                    on_delete_payment(pay.id)
+                  }}
+                  class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
+                  <div class="w-3 h-3 text-red-500">
+                    <FaTrash />
+                  </div>
+                </button>
+              </div>
+            </td>
           </tr>
         {/each}
       </tbody>
