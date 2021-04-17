@@ -38,6 +38,10 @@
 		{ path: '/app/sale', label: 'penjualan', desc: 'pengolahan data kategori penjualan', icon: FaHandHoldingHeart },
 		{ path: '/app/opex', label: 'beban usaha', desc: 'pengolahan data beban usaha', icon: FaLandmark },
 		{ path: '/app/ar', label: 'piutang', desc: 'pengolahan data piutang', icon: FaLandmark },
+		{ path: '/app/ap', label: 'hutang', desc: 'pengolahan data hutang', icon: FaLandmark },
+		{ group: true, label: 'laporan' },
+		{ path: '/app/neraca', label: 'neraca', desc: 'laporan neraca', icon: FaLandmark },
+		{ path: '/app/aruskas', label: 'arus kas', desc: 'laporan arus kas', icon: FaLandmark }
 	]
 
 	onMount(() => {
@@ -59,6 +63,7 @@
 	class="sidenav fixed bottom-0 left-0 top-0 bg-gray-900 text-gray-200"
 	class:w-64="{!is_slim}"
 	class:w-14="{is_slim}"
+	style="overflow-y: scroll;"
 >
 	<!-- <div class="flex items-center justify-center py-5">
 		<img class="logo mr-2" alt="Success Kid" height="32" width="32" src="/setting.svg">

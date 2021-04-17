@@ -14,9 +14,9 @@
 
   let items = []
 
-  async function load_ar ({ per_page, page }) {
+  async function load_ap ({ per_page, page }) {
     if (!process.browser) return;
-    const url = '/api/v1/ar'
+    const url = '/api/v1/ap'
     try {
       const result = await get({
         url,
@@ -39,14 +39,14 @@
     }
   }
 
-  $: load_ar({ per_page, page })
+  $: load_ap({ per_page, page })
 </script>
 
 <div class="cont">
 
   <section class="header flex text-sm">
     <div class="title-count">
-      <div>data piutang</div>
+      <div>data hutang</div>
       <div>{total_data}</div>
     </div>
     <div class="group-input">
@@ -77,7 +77,6 @@
           <th>total bayar</th>
           <th>tersisa</th>
           <th></th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -92,11 +91,9 @@
             </td>
             <td>{rupiah(item.total)}</td>
             <td>{rupiah(item.paid)}</td>
-            <td></td>
-            <td>
             <td>
               <div class="flex items-center">
-                <a href={`/app/ar/${item.id}/detail`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                <a href={`/app/ap/${item.id}/detail`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
                   <div class="w-3 h-3 text-blue-500">
                     <FaPencilAlt />
                   </div>
