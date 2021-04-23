@@ -157,7 +157,7 @@
         url: '/api/v1/sale',
         payload
       })
-      console.log(response)
+      alert('sukses menambah data penjualan')
     } catch (err) {
       console.log(err)
       alert('gagal menambah data penjualan')

@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
+  import Pagination from '../../../components/Pagination.svelte'
   import '../../../styles/jo-table.css'
   import { get, del } from '../../../commons/api'
   import rupiah from '../../../commons/rupiah'
@@ -15,6 +16,9 @@
   let items = []
   let total_page = 0
   let total_data = 0
+  let report_year = 2020
+  let report_month = 1
+  let report_dialog = false
 
   async function load_sales ({ per_page, page }) {
     if (!process.browser) return;
@@ -79,7 +83,7 @@
       print
     </button>
     <a href="/app/sale/create" class="primary">
-      pembelian baru
+      penjualan baru
     </a>
   </section>
 
@@ -135,17 +139,44 @@
     </table>
   </section>
 
-  <section class="pagination">
-    {#each Array(total_page) as _, i}
-      <button
-        on:click={() => {
-          page = i;
-        }}
-        class="inline-block rounded px-2 py-1 text-center text-xs font-bold border border-gray-300 mr-2"
-      >
-        { i + 1 }
-      </button>
-    {/each}
-  </section>
+  <Pagination
+    total_page={total_page}
+    {page}
+    on:change={event => {
+      page = event.detail
+    }}
+  />
 
 </div>
+
+{#if report_dialog}
+  <div
+    class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center"
+    style="z-index: 100; background: rgb(250, 250, 250, 0.8); min-width: 500px;"
+  >
+    <div class="p-6 bg-white rounded shadow-xl">
+      <div 
+        class="font-bold text-gray-600 text-lg"
+        style="max-width: 500px;" 
+      >Form Laporan Penjualan</div>
+      <div class="flex flex-col items-center mt-2">
+        <div>
+          <div class="flex flex-col mb-3">
+            <label class="text-sm">Tahun</label>
+            <input type="number" placeholder="tahun" />
+          </div>
+          <div class="flex flex-col mb-3">
+            <label class="text-sm">Bulan</label>
+            <select>
+              <option disabled>-- pilih bulan --</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <button 
+            class="apperance-none bg-blue-600 text-white px-6 py-1 font-bold mr-2 rounded">print</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{/if}

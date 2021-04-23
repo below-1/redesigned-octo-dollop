@@ -103,6 +103,7 @@
           <th>alamat</th>
           <th>email</th>
           <th>no. hp</th>
+          <th>pembeliam</th>
           <th></th>
         </tr>
       </thead>
@@ -114,6 +115,9 @@
             <td>{item.address ? item.address : ''}</td>
             <td>{item.email ? item.email : ''}</td>
             <td>{item.mobile ? item.mobile : ''}</td>
+            <td>
+              <a class="just-link" href={`/app/supplier/${item.id}/purchase`}>pembelian</a>
+            </td>
             <td>
               <div class="flex items-center">
                 <a 
