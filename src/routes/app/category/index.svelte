@@ -41,15 +41,15 @@
 
   <section class="header flex text-sm">
     <div class="flex mr-4">
-      <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">total data</div>
+      <div class="bg-gray-200 font-bold px-2 py-1 flex items-center">kategori produk</div>
       <div class="bg-blue-600 text-white font-bold flex items-center px-2">{items.length}</div>
     </div>
     <div class="flex-grow"></div>
-    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold rounded mr-4">
+    <button class="outline-primary mr-2">
       print
     </button>
-    <a href="/app/category/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
-      tambah kategori
+    <a href="/app/category/create" class="primary">
+      data baru
     </a>
   </section>
 

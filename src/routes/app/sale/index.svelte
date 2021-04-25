@@ -3,7 +3,8 @@
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import Pagination from '../../../components/Pagination.svelte'
   import '../../../styles/jo-table.css'
-  import { get, del } from '../../../commons/api'
+  import { base_url, get, del } from '../../../commons/api'
+  import { month_options } from '../../../commons/months'
   import rupiah from '../../../commons/rupiah'
   import fdate from '../../../commons/fdate'
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
@@ -16,9 +17,11 @@
   let items = []
   let total_page = 0
   let total_data = 0
-  let report_year = 2020
-  let report_month = 1
+  let report_year = null
+  let report_month = null
   let report_dialog = false
+
+  $: report_input_valid = (report_year !== null) & (report_month !== null)
 
   async function load_sales ({ per_page, page }) {
     if (!process.browser) return;
@@ -56,7 +59,33 @@
     })
   }
 
+  async function gen_report () {
+    report_dialog = false
+    const url = '/api/v1/report/sale_monthly'
+    const params = {
+      year: report_year,
+      month: report_month + 1
+    }
+    try {
+      const response = await get({
+        url,
+        params
+      })
+      const download_url = `${base_url}${response.path}`
+      window.open(download_url, '_blank')
+    } catch (err) {
+      console.log(err)
+      alert('gagal membuat laporan penjualan')
+    }
+  }
+
   $: load_sales({ per_page, page })
+
+  onMount(() => {
+    let date = new Date()
+    report_year = date.getFullYear()
+    report_month = date.getMonth()
+  })
 </script>
 
 <div class="cont">
@@ -79,7 +108,12 @@
       />
     </div>
     <div class="flex-grow"></div>
-    <button class="outline-primary mr-2">
+    <button 
+      on:click={() => {
+        report_dialog = true
+      }}
+      class="outline-primary mr-2"
+    >
       print
     </button>
     <a href="/app/sale/create" class="primary">
@@ -91,7 +125,7 @@
     <table class="jo-table">
       <thead>
         <tr>
-          <th></th>
+          <th>ID</th>
           <th>pelanggan</th>
           <th>waktu</th>
           <th>harga total</th>
@@ -152,29 +186,39 @@
 {#if report_dialog}
   <div
     class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center"
-    style="z-index: 100; background: rgb(250, 250, 250, 0.8); min-width: 500px;"
+    style="z-index: 100; background: rgb(250, 250, 250, 0.8);"
   >
-    <div class="p-6 bg-white rounded shadow-xl">
+    <div class="p-6 bg-white rounded shadow-xl" style="width: 500px;">
       <div 
         class="font-bold text-gray-600 text-lg"
-        style="max-width: 500px;" 
       >Form Laporan Penjualan</div>
-      <div class="flex flex-col items-center mt-2">
+      <div class="flex flex-col mt-2">
         <div>
           <div class="flex flex-col mb-3">
             <label class="text-sm">Tahun</label>
-            <input type="number" placeholder="tahun" />
+            <input 
+              type="number" 
+              placeholder="tahun" 
+              class="border border-gray-300 rounded p-2" 
+              bind:value={report_year}
+            />
           </div>
           <div class="flex flex-col mb-3">
             <label class="text-sm">Bulan</label>
-            <select>
+            <select class="border border-gray-300 rounded p-2" bind:value={report_month}>
               <option disabled>-- pilih bulan --</option>
+              {#each month_options as month}
+                <option value={month.value}>{month.label}</option>
+              {/each}
             </select>
           </div>
         </div>
         <div>
           <button 
-            class="apperance-none bg-blue-600 text-white px-6 py-1 font-bold mr-2 rounded">print</button>
+            disabled={!report_input_valid}
+            on:click={gen_report}
+            class="apperance-none bg-blue-600 text-white px-6 py-1 font-bold mr-2 rounded disabled:opacity-50"
+          >print</button>
         </div>
       </div>
     </div>

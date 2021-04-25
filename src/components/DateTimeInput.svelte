@@ -6,6 +6,7 @@
   import getDaysInMonth from 'date-fns/getDaysInMonth'
   import FaCalendarAlt from 'svelte-icons/fa/FaCalendarAlt.svelte'
   import FaRegClock from 'svelte-icons/fa/FaRegClock.svelte'
+  import { month_options } from '../commons/months'
 
   export let date = new Date()
   $: year = date.getFullYear()
@@ -15,20 +16,6 @@
   $: minutes = date.getMinutes()
 
   const year_options = Array.from({ length: 50 }).map((x, i) => i + 2000)
-  const month_options = [
-    { value: 0, label: 'Januari' },
-    { value: 1, label: 'Februari' },
-    { value: 2, label: 'Maret' },
-    { value: 3, label: 'April' },
-    { value: 4, label: 'Mei' },
-    { value: 5, label: 'Juni' },
-    { value: 6, label: 'Juli' },
-    { value: 7, label: 'Agustus' },
-    { value: 8, label: 'September' },
-    { value: 9, label: 'Oktober' },
-    { value: 10, label: 'November' },
-    { value: 11, label: 'Desember' }
-  ]
 
   $: days_in_month = getDaysInMonth(date)
   $: days_options = Array.from({ length: days_in_month }).map((x, i) => i + 1)

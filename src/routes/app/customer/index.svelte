@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte'
+  import Pagination from '../../../components/Pagination.svelte'
   import '../../../styles/jo-table.css'
   import { get, del } from '../../../commons/api'
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
@@ -9,7 +10,7 @@
   let items = []
   let keyword = ''
   let page = 0
-  let per_page = 20
+  let per_page = 10
   let total_page = 0
 
   $: load_customer({ keyword, page, per_page });
@@ -82,10 +83,10 @@
       />
     </div>
     <div class="flex-grow"></div>
-    <button class="appearance-none border border-green-500 px-4 flex items-center font-bold rounded mr-4">
+    <button class="outline-primary mr-2">
       print
     </button>
-    <a href="/app/customer/create" class="appearance-none bg-green-500 text-white px-4 flex items-center font-bold rounded">
+    <a href="/app/customer/create" class="primary">
       tambah pelanggan
     </a>
   </section>
@@ -136,17 +137,12 @@
     </table>
   </section>
 
-  <section class="pagination">
-    {#each Array(total_page) as _, i}
-      <button
-        on:click={() => {
-          page = i;
-        }}
-        class="inline-block rounded px-2 py-1 text-center text-xs font-bold border border-gray-300 mr-2"
-      >
-        { i + 1 }
-      </button>
-    {/each}
-  </section>
+  <Pagination
+    total_page={total_page}
+    {page}
+    on:change={event => {
+      page = event.detail
+    }}
+  />
 
 </div>

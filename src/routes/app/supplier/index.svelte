@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
+  import Pagination from '../../../components/Pagination.svelte'
   import '../../../styles/jo-table.css'
   import { get, del } from '../../../commons/api'
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
@@ -144,17 +145,12 @@
     </table>
   </section>
 
-  <section class="pagination">
-    {#each Array(total_page) as _, i}
-      <button
-        on:click={() => {
-          page = i;
-        }}
-        class="inline-block rounded px-2 py-1 text-center text-xs font-bold border border-gray-300 mr-2"
-      >
-        { i + 1 }
-      </button>
-    {/each}
-  </section>
+  <Pagination
+    total_page={total_page}
+    {page}
+    on:change={event => {
+      page = event.detail
+    }}
+  />
 
 </div>

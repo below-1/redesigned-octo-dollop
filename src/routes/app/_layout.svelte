@@ -14,8 +14,10 @@
 	import FaBoxes from 'svelte-icons/fa/FaBoxes.svelte'
 	import FaLandmark from 'svelte-icons/fa/FaLandmark.svelte'
 	import FaListOl from 'svelte-icons/fa/FaListOl.svelte'
+	import FaPowerOff from 'svelte-icons/fa/FaPowerOff.svelte'
 	import { fade } from 'svelte/transition';
 	import { del_confirm } from './store'
+	import { get } from '../../commons/api'
 
 	export let segment;
 
@@ -24,6 +26,7 @@
 	const menu_full_size = 64;
 
 	let is_slim = true;
+	let user = {}
 
 	const menus = [
 		{ path: '/app', label: 'dashboard', icon: FaTachometerAlt },
@@ -38,14 +41,25 @@
 		{ path: '/app/sale', label: 'penjualan', desc: 'pengolahan data kategori penjualan', icon: FaHandHoldingHeart },
 		{ path: '/app/opex', label: 'beban usaha', desc: 'pengolahan data beban usaha', icon: FaLandmark },
 		{ path: '/app/ar', label: 'piutang', desc: 'pengolahan data piutang', icon: FaLandmark },
-		{ path: '/app/ap', label: 'hutang', desc: 'pengolahan data hutang', icon: FaLandmark },
-		{ group: true, label: 'laporan' },
-		{ path: '/app/neraca', label: 'neraca', desc: 'laporan neraca', icon: FaLandmark },
-		{ path: '/app/aruskas', label: 'arus kas', desc: 'laporan arus kas', icon: FaLandmark }
+		{ path: '/app/ap', label: 'hutang', desc: 'pengolahan data hutang', icon: FaLandmark }
+		// { group: true, label: 'laporan' },
+		// { path: '/app/neraca', label: 'neraca', desc: 'laporan neraca', icon: FaLandmark },
+		// { path: '/app/aruskas', label: 'arus kas', desc: 'laporan arus kas', icon: FaLandmark }
 	]
 
-	onMount(() => {
+	async function get_about_me () {
+		try {
+			user = await get({ url: '/auth/me' })
+		} catch (err) {
+			console.log(err)
+			alert('anda belum login')
+			window.location = '/login'
+		}
+	}
+
+	onMount(async () => {
 		tippy('[data-tippy-content]')
+		await get_about_me()
 	})
 </script>
 
@@ -53,17 +67,19 @@
 	class="top-nav fixed top-0 left-0 right-0 h-16 flex items-center px-6 bg-white"
 	style={`left: ${is_slim ? '3.5' : '16' }rem;`}
 >
-	<input
-		class="bg-gray-100 p-2 rounded text-sm"
-		placeholder="keyword.."
-	/>
+	<div class="flex-grow"></div>
+	<button class="apperance-none flex items-center">
+		<div class="mr-2 text-sm font-bold">{user.username}</div>
+		<div class="h-4 w-4">
+			<FaPowerOff/>
+		</div>
+	</button>
 </nav>
 
 <nav 
 	class="sidenav fixed bottom-0 left-0 top-0 bg-gray-900 text-gray-200"
 	class:w-64="{!is_slim}"
 	class:w-14="{is_slim}"
-	style="overflow-y: scroll;"
 >
 	<!-- <div class="flex items-center justify-center py-5">
 		<img class="logo mr-2" alt="Success Kid" height="32" width="32" src="/setting.svg">

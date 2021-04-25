@@ -50,7 +50,7 @@
       />
     </div>
     <div class="flex-grow"></div>
-    <button class="outline-primary">
+    <button class="outline-primary mr-2">
       print
     </button>
     <a href="/app/optype/create" class="primary">
