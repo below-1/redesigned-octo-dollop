@@ -36,7 +36,9 @@
 		</figure>
 
 		<p><strong>Masuk kedalam sistem</strong></p>
-		<button class="appearance-none bg-blue-600 text-white px-12 py-2 rounded font-bold my-4 text-lg">login</button>
+		<a 
+			href="/login"
+			class="appearance-none bg-blue-600 text-white px-12 py-2 rounded font-bold my-4 text-lg">login</a>
 
 	</main>
 </div>

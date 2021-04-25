@@ -47,6 +47,11 @@
 		// { path: '/app/aruskas', label: 'arus kas', desc: 'laporan arus kas', icon: FaLandmark }
 	]
 
+	async function logout () {
+		localStorage.removeItem('waka.token')
+		window.location = '/login'
+	}
+
 	async function get_about_me () {
 		try {
 			user = await get({ url: '/auth/me' })
@@ -68,7 +73,7 @@
 	style={`left: ${is_slim ? '3.5' : '16' }rem;`}
 >
 	<div class="flex-grow"></div>
-	<button class="apperance-none flex items-center">
+	<button on:click={logout} class="apperance-none flex items-center">
 		<div class="mr-2 text-sm font-bold">{user.username}</div>
 		<div class="h-4 w-4">
 			<FaPowerOff/>
