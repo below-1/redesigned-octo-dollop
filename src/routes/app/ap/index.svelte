@@ -72,9 +72,11 @@
       <thead>
         <tr>
           <th>no.</th>
-          <th>kustomer</th>
-          <th>penjualan</th>
-          <th>total bayar</th>
+          <th>supplier</th>
+          <th>pegawai</th>
+          <th>pembelian</th>
+          <th>jumlah</th>
+          <th>sudah dibayar</th>
           <th>tersisa</th>
           <th></th>
         </tr>
@@ -87,10 +89,14 @@
               <a href={`/app/customer/${item.customer_id}/edit`} class="just-link">{item.customer}</a>
             </td>
             <td>
+              {item.empl_name}
+            </td>
+            <td>
               <a href={`/app/sale/${item.order_id}/detail`} class="just-link">{item.order_id}</a>
             </td>
             <td>{rupiah(item.total)}</td>
             <td>{rupiah(item.paid)}</td>
+            <td>{rupiah(item.total - item.paid)}</td>
             <td>
               <div class="flex items-center">
                 <a href={`/app/ap/${item.id}/detail`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
