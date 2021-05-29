@@ -16,6 +16,7 @@
 
   let title = ''
   let summary = ''
+  let unit = ''
   let content = ''
   let categories = []
   let selected_categories = []
@@ -38,6 +39,7 @@
       title = result.title
       summary = result.summary
       content = result.content
+      unit = result.unit
       selected_categories = result.categories.map(it => it.id)
     } catch (err) {
       console.log(err)
@@ -59,6 +61,7 @@
       title,
       summary,
       content,
+      unit,
       selected_categories
     }
     const url = `/api/v1/product/${id}`
@@ -87,6 +90,10 @@
       {#if $product_form.fields.title.errors.includes('required')}
         <small class="text-red-500 text-xs">nama harus diisi</small>
       {/if}
+    </div>
+    <div class="flex flex-col mb-3">
+      <label>Satuan</label>
+      <input bind:value={unit} class="border border-gray-300 rounded p-2" />
     </div>
     <div class="flex flex-col mb-3">
       <label>Kategori</label>

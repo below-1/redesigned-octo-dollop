@@ -2,6 +2,7 @@
   import { onMount } from 'svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import Pagination from '../../../components/Pagination.svelte'
+  import Dialog from '../../../components/Dialog.svelte'
   import '../../../styles/jo-table.css'
   import { get, del } from '../../../commons/api'
   import rupiah from '../../../commons/rupiah'
@@ -16,6 +17,10 @@
   let per_page = 20
   let total_page = 0
 
+  let show_defect_dialog = false
+  let defect_dialog_item = {}
+  let defect_dialog_defect = 0
+
   async function load_product ({ keyword, per_page, page }) {
     if (!process.browser) return;
     const params = {
@@ -29,7 +34,15 @@
         url: '/api/v1/product',
         params
       })
-      items = result.items
+      items = result.items.map(it => {
+        return {
+          ...it,
+          sold: parseInt(it.sold),
+          defective: parseInt(it.defective),
+          available: parseInt(it.available),
+          quantity: parseInt(it.quantity)
+        }
+      })
       total_page = result.total_page
     } catch (err) {
       console.log(err)
@@ -130,22 +143,18 @@
                     <FaPencilAlt />
                   </div>
                 </a>
-                <button 
-                  on:click={() => {
-                    on_delete(item.id)
-                  }}
-                  class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2">
-                  <div class="w-3 h-3 text-red-500">
-                    <FaTrash />
-                  </div>
-                </button>
                 <ButtonMenu
                   btn_class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300"
                   menu_class="bg-white shadow"
                   menus={[
                     {
-                      label: 'tambah stok',
-                      action: () => {}
+                      label: 'tambah jumlah barang rusak',
+                      action: () => {
+                        defect_dialog_item = { ...item };
+                        show_defect_dialog = true;
+                        console.log('here');
+                        console.log(show_defect_dialog);
+                      }
                     },
                     {
                       label: 'jual',
@@ -155,6 +164,16 @@
                 >
                   <div slot="btn_content" class="w-3 h-3 text-gray-600"><FaCogs /></div>
                 </ButtonMenu>
+                <button 
+                  on:click={() => {
+                    on_delete(item.id)
+                  }}
+                  disabled={item.sold}
+                  class="appearance-none rounded-full p-1 hover:bg-gray-300 mr-2 disabled:opacity-50">
+                  <div class="w-3 h-3 text-red-500">
+                    <FaTrash />
+                  </div>
+                </button>
               </div>
             </td>
           </tr>
@@ -170,5 +189,20 @@
       page = event.detail
     }}
   />
+
+  <Dialog bind:show={show_defect_dialog}>
+    <div class="w-1/3">
+      <h2>Ubah Jumlah Barang Rusak</h2>
+      <div class="p-4">
+        <div class="flex flex-col justify-center mb-4">
+          <label>Jumlah Barang Rusak</label>
+          <input 
+            type="number"
+            bind:value={defect_dialog_defect} 
+            class="w-full border border-gray-300 rounded px-2 py-1" />
+        </div>
+      </div>
+    </div>
+  </Dialog>
 
 </div>

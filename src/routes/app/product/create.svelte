@@ -7,6 +7,7 @@
   let title = ''
   let summary = ''
   let content = ''
+  let unit = ''
   let categories = []
   let selected_category = []
 
@@ -31,6 +32,7 @@
       title,
       summary,
       content,
+      unit,
       categories_id: selected_category
     }
     const url = '/api/v1/product'
@@ -59,6 +61,10 @@
       {#if $product_form.fields.title.errors.includes('required')}
         <small class="text-red-500 text-xs">nama harus diisi</small>
       {/if}
+    </div>
+    <div class="flex flex-col mb-3">
+      <label>Satuan</label>
+      <input bind:value={unit} class="border border-gray-300 rounded p-2" />
     </div>
     <div class="flex flex-col mb-3">
       <label>Kategori</label>

@@ -246,7 +246,7 @@
         <tr>
           <th>no.</th>
           <th>produk</th>
-          <th>pcs</th>
+          <th>jumlah</th>
           <th>harga beli</th>
           <th>harga jual</th>
           <th>diskon</th>
@@ -257,7 +257,7 @@
         {#each items as item, i}
           <tr>
             <td>{i + 1}</td>
-            <td>{item.product_title}</td>
+            <td>{item.product_title} ({item.product_unit})</td>
             <td>{item.quantity}</td>
             <td>{rupiah(item.price)}</td>
             <td>{item.sale_price}</td>

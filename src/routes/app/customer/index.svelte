@@ -96,10 +96,8 @@
       <thead>
         <tr>
           <th>no.</th>
-          <th>nama depan</th>
-          <th>nama belakang</th>
+          <th>nama</th>
           <th>alamat</th>
-          <th>email</th>
           <th>no.hp</th>
           <th></th>
         </tr>
@@ -109,9 +107,7 @@
           <tr>
             <td>{(i + 1) + (per_page * page)}</td>
             <td>{item.first_name}</td>
-            <td>{item.last_name}</td>
             <td>{item.address ? item.address : ''}</td>
-            <td>{item.email ? item.email : ''}</td>
             <td>{item.mobile ? item.mobile : ''}</td>
             <td>
               <div class="flex items-center">

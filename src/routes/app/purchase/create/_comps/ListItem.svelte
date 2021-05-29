@@ -20,7 +20,7 @@
       <tr>
         <th>no.</th>
         <th>produk</th>
-        <th>pcs</th>
+        <th>jumlah</th>
         <th>harga</th>
         <th>diskon</th>
         <th>mrp</th>

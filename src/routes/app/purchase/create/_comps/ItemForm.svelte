@@ -98,6 +98,7 @@
     let payload = {
       product_id,
       product_title: selected_product.title,
+      product_unit: selected_product.unit,
       quantity,
       available,
       defective,
