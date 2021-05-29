@@ -107,7 +107,7 @@
           <th>metod pembayaran</th>
           <th>status</th>
           <th>nominal</th>
-          <th>content</th>
+          <th>keterangan</th>
           <th></th>
         </tr>
       </thead>
@@ -116,8 +116,8 @@
           <tr>
             <td>{item.opex.name}</td>
             <td>{fdate(new Date(item.created_at))}</td>
-            <td>{item.mode}</td>
-            <td>{item.status}</td>
+            <td class="lowercase">{item.mode}</td>
+            <td class="lowercase">{item.status}</td>
             <td>{rupiah(parseInt(item.nominal))}</td>
             <td>{item.content ? item.content : ''}</td>
             <td>
