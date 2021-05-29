@@ -214,7 +214,7 @@
         <tr>
           <th>no.</th>
           <th>produk</th>
-          <th>pcs</th>
+          <th>jumlah</th>
           <th>harga beli</th>
           <th>harga jual</th>
           <th>diskon</th>

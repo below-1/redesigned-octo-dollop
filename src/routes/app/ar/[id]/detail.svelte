@@ -42,6 +42,7 @@
   let delay = {}
   let order = {}
   let customer = {}
+  let admin = {}
   let payments = []
   let transaction = {}
 
@@ -59,8 +60,9 @@
       const result = await get({
         url
       })
-      const { order: _order, payments: _payments, ..._delay } = result
+      const { admin: _admin, order: _order, payments: _payments, ..._delay } = result
       const { user: _user, transaction: _transaction, ...__order } = _order
+      admin = _admin
       order = __order
       payments = _payments
       delay = _delay
@@ -103,9 +105,15 @@
     <h1>Detail Piutang</h1>
     <ul>
       <li>
-        <div>Kustomer</div>
+        <div>Pelanggan</div>
         <div>
           <a href={`/app/customer/${customer.id}/edit`}>{customer.first_name}</a>
+        </div>
+      </li>
+      <li>
+        <div>Pegawai</div>
+        <div>
+          {admin.first_name}
         </div>
       </li>
       <li>
