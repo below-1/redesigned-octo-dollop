@@ -30,7 +30,7 @@
 
   <section class="header flex text-sm">
     <div class="title-count">
-      <div>data pegawai</div>
+      <div>data admin</div>
       <div>{items.length}</div>
     </div>
     <div class="group-input">
@@ -45,7 +45,7 @@
     </div>
     <div class="flex-grow"></div>
     <a href="/app/admin/create" class="primary">
-      tambah pelanggan
+      tambah admin
     </a>
   </section>
 
