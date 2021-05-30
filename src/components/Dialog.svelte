@@ -14,7 +14,7 @@
       show = false;
     }}
   >
-    <div class="p-6 bg-white rounded shadow-xl">
+    <div class="bg-white rounded shadow-xl">
       <slot>
       </slot>
     </div>
