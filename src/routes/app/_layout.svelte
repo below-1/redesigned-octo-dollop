@@ -8,6 +8,8 @@
 	import FaSignOutAlt from 'svelte-icons/fa/FaSignOutAlt.svelte'
 	import FaTachometerAlt from 'svelte-icons/fa/FaTachometerAlt.svelte'
 	import FaUsers from 'svelte-icons/fa/FaUsers.svelte'
+	import FaUserLock from 'svelte-icons/fa/FaUserLock.svelte'
+	import FaUserTie from 'svelte-icons/fa/FaUserTie.svelte'
 	import FaTruckMoving from 'svelte-icons/fa/FaTruckMoving.svelte'
 	import FaHandHoldingUsd from 'svelte-icons/fa/FaHandHoldingUsd.svelte'
 	import FaHandHoldingHeart from 'svelte-icons/fa/FaHandHoldingHeart.svelte'
@@ -30,18 +32,19 @@
 
 	const menus = [
 		{ path: '/app', label: 'dashboard', icon: FaTachometerAlt },
-		{ group: true, label: 'master' },
 		{ path: '/app/category', label: 'kategori barang', desc: 'pengolahan data kategori barang', icon: FaListOl },
 		{ path: '/app/optype', label: 'kategori BU', desc: 'pengolahan data kategori beban usaha', icon: FaListOl },
 		{ path: '/app/customer', label: 'pelanggan', desc: 'pengolahan data pelanggan', icon: FaUsers },
 		{ path: '/app/supplier', label: 'supplier', desc: 'pengolahan data supplier', icon: FaTruckMoving },
 		{ path: '/app/product', label: 'gudang', desc: 'pengolahan data barang', icon: FaBoxes },
-		{ group: true, label: 'transaksi' },
 		{ path: '/app/purchase', label: 'pembelian', desc: 'pengolahan data pembelian', icon: FaHandHoldingUsd },
 		{ path: '/app/sale', label: 'penjualan', desc: 'pengolahan data kategori penjualan', icon: FaHandHoldingHeart },
 		{ path: '/app/opex', label: 'beban usaha', desc: 'pengolahan data beban usaha', icon: FaLandmark },
 		{ path: '/app/ar', label: 'piutang', desc: 'pengolahan data piutang', icon: FaLandmark },
-		{ path: '/app/ap', label: 'hutang', desc: 'pengolahan data hutang', icon: FaLandmark }
+		{ path: '/app/ap', label: 'hutang', desc: 'pengolahan data hutang', icon: FaLandmark },
+		{ path: '/app/ap', label: 'hutang', desc: 'pengolahan data hutang', icon: FaLandmark },
+		{ path: '/app/admin', label: 'admin', desc: 'data admin', icon: FaUserTie },
+		{ path: '/app/employee', label: 'pegawai', desc: 'data pegawai', icon: FaUserLock }
 		// { group: true, label: 'laporan' },
 		// { path: '/app/neraca', label: 'neraca', desc: 'laporan neraca', icon: FaLandmark },
 		// { path: '/app/aruskas', label: 'arus kas', desc: 'laporan arus kas', icon: FaLandmark }
@@ -69,7 +72,7 @@
 </script>
 
 <nav 
-	class="top-nav fixed top-0 left-0 right-0 h-16 flex items-center px-6 bg-white"
+	class="top-nav fixed top-0 left-0 right-0 h-12 flex items-center px-6 bg-white"
 	style={`left: ${is_slim ? '3.5' : '16' }rem;`}
 >
 	<div class="flex-grow"></div>
@@ -95,12 +98,12 @@
 			on:click={() => {
 				is_slim = !is_slim
 			}}
-			class="bg-indigo-900 hover:bg-gray-700 flex items-center justify-center"
+			class="bg-indigo-900 hover:bg-gray-700 flex items-center h-12"
 		>
 			<div 
-				class="w-14 py-6 flex items-center justify-center"
+				class="w-14 flex items-center justify-center"
 			>
-				<img class="logo" alt="Success Kid" height="32" width="32" src="/setting.svg">
+				<img class="logo" alt="Success Kid" height="24" width="24" src="/setting.svg">
 			</div>
 			{#if !is_slim}
 				<div class="font-bold my-2 text-lg">cendana</div>
@@ -124,12 +127,12 @@
 					<div
 						class="w-14 py-3 flex items-center justify-center text-gray-400"
 					>
-						<div class="w-5 h-5">
+						<div class="w-4 h-4">
 							<svelte:component this={menu.icon} />
 						</div>
 					</div>
 					{#if !is_slim}
-						<div class="text-gray-300 font-light hover:font-semibold">{menu.label}</div>
+						<div class="text-gray-300 text-sm font-light hover:font-semibold">{menu.label}</div>
 					{/if}
 				</a>
 			</li>
