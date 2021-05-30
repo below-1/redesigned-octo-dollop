@@ -2,11 +2,11 @@
   import { onMount } from 'svelte'
   import ButtonMenu from '../../../components/ButtonMenu.svelte'
   import Pagination from '../../../components/Pagination.svelte'
-  import Dialog from '../../../components/Dialog.svelte'
   import '../../../styles/jo-table.css'
   import { get, del } from '../../../commons/api'
   import rupiah from '../../../commons/rupiah'
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
+  import FaArchive from 'svelte-icons/fa/FaArchive.svelte'
   import FaTrash from 'svelte-icons/fa/FaTrash.svelte'
   import FaCogs from 'svelte-icons/fa/FaCogs.svelte'
   import { del_confirm } from '../store'
@@ -16,10 +16,6 @@
   let keyword = ''
   let per_page = 20
   let total_page = 0
-
-  let show_defect_dialog = false
-  let defect_dialog_item = {}
-  let defect_dialog_defect = 0
 
   async function load_product ({ keyword, per_page, page }) {
     if (!process.browser) return;
@@ -143,27 +139,11 @@
                     <FaPencilAlt />
                   </div>
                 </a>
-                <ButtonMenu
-                  btn_class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300"
-                  menu_class="bg-white shadow"
-                  menus={[
-                    {
-                      label: 'tambah jumlah barang rusak',
-                      action: () => {
-                        defect_dialog_item = { ...item };
-                        show_defect_dialog = true;
-                        console.log('here');
-                        console.log(show_defect_dialog);
-                      }
-                    },
-                    {
-                      label: 'jual',
-                      action: () => {}
-                    }
-                  ]}
-                >
-                  <div slot="btn_content" class="w-3 h-3 text-gray-600"><FaCogs /></div>
-                </ButtonMenu>
+                <a href={`/app/product/${item.id}/items`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
+                  <div class="w-3 h-3 text-indigo-500">
+                    <FaArchive />
+                  </div>
+                </a>
                 <button 
                   on:click={() => {
                     on_delete(item.id)
@@ -189,20 +169,5 @@
       page = event.detail
     }}
   />
-
-  <Dialog bind:show={show_defect_dialog}>
-    <div class="w-1/3">
-      <h2>Ubah Jumlah Barang Rusak</h2>
-      <div class="p-4">
-        <div class="flex flex-col justify-center mb-4">
-          <label>Jumlah Barang Rusak</label>
-          <input 
-            type="number"
-            bind:value={defect_dialog_defect} 
-            class="w-full border border-gray-300 rounded px-2 py-1" />
-        </div>
-      </div>
-    </div>
-  </Dialog>
 
 </div>
