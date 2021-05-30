@@ -253,7 +253,8 @@
         <tr>
           <th>no.</th>
           <th>produk</th>
-          <th>pcs</th>
+          <th>satuan</th>
+          <th>jumlah</th>
           <th>harga beli</th>
           <th>harga jual</th>
           <th>diskon</th>
@@ -264,6 +265,7 @@
           <tr>
             <td>{i + 1}</td>
             <td>{item.product.title}</td>
+            <td>{item.product.unit}</td>
             <td>{item.quantity}</td>
             <td>{rupiah(parseInt(item.price))}</td>
             <td>{rupiah(parseInt(item.sale_price))}</td>
