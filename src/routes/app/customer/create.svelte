@@ -25,7 +25,8 @@
       last_name,
       alamat,
       mobile,
-      email
+      email,
+      role: 'EMPLOYER'
     }
     try {
       await post({ url: '/api/v1/customer', payload })
@@ -40,7 +41,7 @@
 
 <div class="flex items-center justify-center flex-grow">
   <div class="w-1/3 p-4 rounded bg-white text-sm">
-    <div class="font-bold text-xl mb-3">input data kategori</div>
+    <div class="font-bold text-xl mb-3">input data pelanggan</div>
     <div class="flex flex-col mb-3">
       <label>Nama Depan</label>
       <input bind:value={first_name} class="border border-gray-300 rounded p-2" />

@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte'
+  import { onMount, getContext } from 'svelte'
   import '../../../styles/jo-table.css'
   import { get, del } from '../../../commons/api'
   import FaPencilAlt from 'svelte-icons/fa/FaPencilAlt.svelte'
@@ -8,6 +8,8 @@
 
   let items = []
   let keyword = ''
+  const { getUser } = getContext('user');
+  let currentUser = {}
 
   async function load_admin () {
     if (!process.browser) return; 
@@ -23,7 +25,27 @@
     }
   }
 
-  onMount(load_admin)
+  function on_delete (id) {
+    const url = `/api/v1/admin/${id}`
+    del_confirm.show({
+      entity: 'admin',
+      id,
+      on_yes: async () => {
+        try {
+          await del({ url })
+          await load_data()
+        } catch (err) {
+          console.log(err)
+          alert('gagal menghapus data admin')
+        }
+      }
+    })
+  }
+
+  onMount(async () => {
+    await load_admin();
+    currentUser = getUser();
+  });
 </script>
 
 <div class="cont">
@@ -55,8 +77,7 @@
         <tr>
           <th>no.</th>
           <th>username</th>
-          <th>nama depan</th>
-          <th>nama belakang</th>
+          <th>nama</th>
           <th></th>
         </tr>
       </thead>
@@ -66,7 +87,6 @@
             <td>{i + 1}</td>
             <td>{item.username}</td>
             <td>{item.first_name}</td>
-            <td>{item.last_name}</td>
             <td>
               <div class="flex items-center">
                 <a href={`/app/admin/${item.id}/edit`} class="appearance-none rounded-full p-1 mr-2 hover:bg-gray-300">
@@ -74,6 +94,7 @@
                     <FaPencilAlt />
                   </div>
                 </a>
+                {#if item.id != currentUser.id}
                 <button 
                   on:click={() => {
                     on_delete(item.id)
@@ -83,6 +104,7 @@
                     <FaTrash />
                   </div>
                 </button>
+                {/if}
               </div>
             </td>
           </tr>

@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte'
+	import { onMount, setContext } from 'svelte'
 	import tippy from 'tippy.js';
 	import 'tippy.js/dist/tippy.css';
 	import TiChartBar from 'svelte-icons/ti/TiChartBar.svelte'
@@ -29,6 +29,10 @@
 
 	let is_slim = true;
 	let user = {}
+
+	setContext('user', {
+		getUser: () => user
+	})
 
 	const menus = [
 		{ path: '/app', label: 'dashboard', icon: FaTachometerAlt },
